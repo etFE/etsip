@@ -1,0 +1,26 @@
+@import '~antd/lib/style/themes/default.less';
+
+.editableTable {
+    .editableButtonGroup {
+        margin-bottom: 10px;
+
+        button {
+            margin-right: 10px;
+        }
+    }
+
+    :global {
+        tr > th.ant-table-selection-column,
+        tr > td.ant-table-selection-column {
+            min-width: 40px;
+            width: 40px;
+        }
+        // .ant-table-pagination {
+        //     margin-top: 24px;
+        // }
+
+        .ant-table td {
+            white-space: nowrap;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+@import '~antd/lib/style/themes/default.less';
+
+.editableCell {
+
+    // &.cellText {
+    // }
+    &.cellCheckbox {
+        text-align: center;
+    }
+    &.cellSelect {
+        :global {
+            .ant-select-sm {
+                width: 100%;
+            }
+        }
+    }
+    &.cellDatepicker {
+        width: 115px;
+    }
+    &.cellOperations {
+        span {
+            display: inline-block;
+            cursor: pointer;
+            color: #1890ff;
+        }
+        div.devider {
+            display: inline-block;
+            margin: 0 5px;
+            width: 1px;
+            height: 14px;
+            background: #e8e8e8;
+            margin-bottom: -2px;
+        }
+    }
+}
