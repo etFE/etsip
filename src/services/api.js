@@ -10,11 +10,11 @@ export const maSlog = {
 // 用户
 export const maUser = {
     query: async () => request(`${baseUrl}/user/query`),
-    // add
-    // update
-    // delete
-    // disable
-    // enable
+    add: async (rowData) => request(`${baseUrl}/user/add`, { method: 'POST', body: rowData }),
+    update: async (rowData) => request(`${baseUrl}/user/update`, { method: 'POST', body: rowData }),
+    delete: async (rowData) => request(`${baseUrl}/user/delete`, { method: 'POST', body: rowData }),
+    disable: async (rowData) => request(`${baseUrl}/user/disable`, { method: 'POST', body: rowData }),
+    enable: async (rowData) => request(`${baseUrl}/user/enable`, { method: 'POST', body: rowData }),
     // index
     // count
     // error
@@ -53,6 +53,11 @@ export const maMenu = {
 // 资产大屏显示
 export const maRep = {
     query: async () => request(`${baseUrl}/rep/query`),
+}
+
+// 报表
+export const report = {
+    query: async () => request(`${baseUrl}/report/query`),
 }
 
 // ----------------------------------------- //

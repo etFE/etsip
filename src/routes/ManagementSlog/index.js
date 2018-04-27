@@ -1,13 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import {
-    Card,
-    Button,
-} from 'antd';
-import BasicTable from 'components/BasicTable';
+import { Card } from 'antd';
+import EditableTable from 'components/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-
-import styles from './index.less';
 
 @connect(({ maSlog, loading }) => ({
     maSlog,
@@ -17,84 +12,78 @@ export default class ManagementSlog extends PureComponent {
     constructor (props) {
         super(props)
 
-        // this.state = {
-        //     selectedRows: [],
-        // }
-        this.handleQuery = this.handleQuery.bind(this)
+        this.state = {
+            columns: [
+                {
+                    title: '用户',
+                    dataIndex: 'username',
+                    width: 100,
+                },
+                {
+                    title: 'uid',
+                    dataIndex: 'uid',
+                    width: 100,
+                },
+                {
+                    title: 't',
+                    dataIndex: 't',
+                    width: 100,
+                },
+                {
+                    title: 'source',
+                    dataIndex: 'source',
+                    width: 160,
+                },
+                {
+                    title: 'ip',
+                    dataIndex: 'ip',
+                    width: 120,
+                },
+                {
+                    title: '信息',
+                    dataIndex: 'msg',
+                    width: 120,
+                },
+                {
+                    title: '标签',
+                    dataIndex: 'tag',
+                    width: 120,
+                },
+                {
+                    title: '创建时间',
+                    dataIndex: 'createTime',
+                    width: 160,
+                },
+            ],
+        }
     }
 
     componentDidMount() {
-        this.handleQuery()
+        this.queryData()
     }
 
-    handleQuery () {
+    queryData = () => {
         const { dispatch } = this.props;
         dispatch({
             type: 'maSlog/fetch',
         });
     }
 
-    // handleSelectRows = rows => {
-    //     this.setState({
-    //         selectedRows: rows,
-    //     });
-    // };
-
     render() {
+        const { columns } = this.state
         const { maSlog, loading } = this.props;
-        // const { selectedRows } = this.state;
 
-        const columns = [
-            {
-                title: '用户',
-                dataIndex: 'username',
-            },
-            {
-                title: 'uid',
-                dataIndex: 'uid',
-            },
-            {
-                title: 't',
-                dataIndex: 't',
-            },
-            {
-                title: 'source',
-                dataIndex: 'source',
-            },
-            {
-                title: 'ip',
-                dataIndex: 'ip',
-            },
-            {
-                title: '信息',
-                dataIndex: 'msg',
-            },
-            {
-                title: '标签',
-                dataIndex: 'tag',
-            },
-            {
-                title: '创建时间',
-                dataIndex: 'createTime',
-            },
-        ];
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
-                    <div className={styles.tableList}>
-                        <div className={styles.tableListForm}>
-                            <Button
-                                type="primary"
-                                onClick={this.handleQuery}
-                            >
-                                查询
-                            </Button>
-                        </div>
-                        <BasicTable
+                    <div>
+                        {/* <div className={}>
+                        </div> */}
+                        <EditableTable
                             loading={loading}
-                            data={maSlog.data}
+                            dataSource={maSlog.data.list}
                             columns={columns}
-                            // onSelectRow={this.handleSelectRows}
+                            queryData={this.queryData}
                         />
                     </div>
                 </Card>

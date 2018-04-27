@@ -159,3 +159,11 @@ const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-
 export function isUrl(path) {
     return reg.test(path);
 }
+
+export const mockPromise = (data) => (
+    new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(data)
+        }, 1000);
+    })
+)

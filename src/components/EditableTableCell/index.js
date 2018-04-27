@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Input, Checkbox, Select, DatePicker, Popconfirm } from 'antd'
 import moment from 'moment'
@@ -8,7 +8,7 @@ import styles from './index.less'
 /**
  * 普通文本框编辑单元格
  */
-export class EditCellText extends Component {
+export class EditCellText extends PureComponent {
     state = {
         value: this.props.value,
     }
@@ -50,7 +50,7 @@ EditCellText.propTypes = {
 /**
  * 复选框编辑单元格
  */
-export class EditCellCheckbox extends Component {
+export class EditCellCheckbox extends PureComponent {
     state = {
         checked: this.props.value,
     }
@@ -88,7 +88,7 @@ EditCellCheckbox.propTypes = {
 /**
  * 复选框编辑单元格
  */
-export class EditCellSelect extends Component {
+export class EditCellSelect extends PureComponent {
     state = {
         value: this.props.value,
         options: this.props.options,
@@ -143,7 +143,7 @@ EditCellSelect.propTypes = {
 /**
  * 日期编辑单元格
  */
-export class EditCellDatepicker extends Component {
+export class EditCellDatepicker extends PureComponent {
     state = {
         value: this.props.value,
     }
@@ -189,7 +189,7 @@ EditCellDatepicker.propTypes = {
 /**
  * 操作列
  */
-export class EditCellOperations extends Component {
+export class EditCellOperations extends PureComponent {
     handleSave = () => {
         this.props.rowSave()
     }
@@ -200,6 +200,19 @@ export class EditCellOperations extends Component {
 
     render() {
         const { editable, operations } = this.props;
+        const otherOperations = operations.map((item) => (
+            item.hasTip ? (
+                <Popconfirm key={item.text} title={`确定${item.text}？`} onConfirm={item.handleClick}>
+                    <div className={styles.devider}  />
+                    <span>{item.text}</span>
+                </Popconfirm>
+            ) : (
+                <Fragment key={item.text} >
+                    <div className={styles.devider}  />
+                    <span onClick={item.handleClick}>{item.text}</span>
+                </Fragment>
+            )
+        ))
 
         return (
             <div className={`${styles.editableCell} ${styles.cellOperations}`}>
@@ -212,6 +225,7 @@ export class EditCellOperations extends Component {
                 <Popconfirm title="确定删除？" onConfirm={this.handleDelete}>
                     <span>删除</span>
                 </Popconfirm>
+                { otherOperations }
             </div>
         );
     }
@@ -221,9 +235,11 @@ EditCellOperations.defaultProps = {
     editable: false,
     rowSave: () => {},
     rowDelete: () => {},
+    operations: [],
 }
 EditCellOperations.propTypes = {
     editable: PropTypes.bool,
     rowSave: PropTypes.func,
     rowDelete: PropTypes.func,
+    operations: PropTypes.array,
 }

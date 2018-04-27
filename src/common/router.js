@@ -73,28 +73,28 @@ export const getRouterData = app => {
             component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
         },
         '/management/slog': {
-            component: dynamicWrapper(app, ['rule', 'maSlog'], () => import('../routes/ManagementSlog')),
+            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementSlog')),
         },
         '/management/user': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/ManagementUser')),
+            component: dynamicWrapper(app, ['maUser'], () => import('../routes/ManagementUser')),
         },
         '/management/mod': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/ManagementMod')),
+            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementMod')),
         },
         '/management/role': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/ManagementRole')),
+            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementRole')),
         },
         '/management/task': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/ManagementTask')),
+            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementTask')),
         },
         '/management/menu': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/ManagementMenu')),
+            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementMenu')),
         },
         '/management/rep': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/ManagementRep')),
+            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementRep')),
         },
         '/report/configHeader': {
-            component: dynamicWrapper(app, ['chart'], () => import('../routes/Report/ConfigHeader')),
+            component: dynamicWrapper(app, ['report'], () => import('../routes/Report/ConfigHeader')),
         },
 
         // '/result/success': {
