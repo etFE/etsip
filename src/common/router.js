@@ -73,50 +73,45 @@ export const getRouterData = app => {
             component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
         },
         '/management/slog': {
-            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementSlog')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementSlog')),
         },
         '/management/user': {
-            component: dynamicWrapper(app, ['maUser'], () => import('../routes/ManagementUser')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementUser')),
         },
         '/management/mod': {
-            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementMod')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementMod')),
         },
         '/management/role': {
-            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementRole')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementRole')),
         },
         '/management/task': {
-            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementTask')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementTask')),
         },
         '/management/menu': {
-            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementMenu')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementMenu')),
         },
         '/management/rep': {
-            component: dynamicWrapper(app, ['maSlog'], () => import('../routes/ManagementRep')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementRep')),
         },
         '/report/configHeader': {
-            component: dynamicWrapper(app, ['report'], () => import('../routes/Report/ConfigHeader')),
+            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/Report/ConfigHeader')),
         },
 
-        // '/result/success': {
-        //     component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
-        // },
-        // '/result/fail': {
-        //     component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
-        // },
-        // '/exception/403': {
-        //     component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
-        // },
-        // '/exception/404': {
-        //     component: dynamicWrapper(app, [], () => import('../routes/Exception/404')),
-        // },
-        // '/exception/500': {
-        //     component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
-        // },
-        // '/exception/trigger': {
-        //     component: dynamicWrapper(app, ['error'], () =>
-        //       import('../routes/Exception/triggerException')
-        //     ),
-        // },
+
+        '/exception/403': {
+            component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
+        },
+        '/exception/404': {
+            component: dynamicWrapper(app, [], () => import('../routes/Exception/404')),
+        },
+        '/exception/500': {
+            component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
+        },
+        '/exception/trigger': {
+            component: dynamicWrapper(app, ['error'], () =>
+              import('../routes/Exception/triggerException')
+            ),
+        },
 
         '/user': {
             component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),

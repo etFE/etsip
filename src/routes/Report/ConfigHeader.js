@@ -87,9 +87,9 @@ const cols = [
     },
 ]
 
-@connect(({ report, loading }) => ({
-    report,
-    loading: loading.models.report,
+@connect(({ editableTable, loading }) => ({
+    editableTable,
+    loading: loading.models.editableTable,
 }))
 export default class ConfigHeader extends PureComponent {
     constructor (props) {
@@ -107,42 +107,118 @@ export default class ConfigHeader extends PureComponent {
     queryData = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'report/fetch',
+            type: 'editableTable/fetch',
+            payload: {
+                fetchMethod: 'mockPromise',
+                fetchData: {
+                    list: [
+                        {
+                            dataIndex: 'col1',
+                            title: '列一',
+                            isShow: true,
+                            align: 'left',
+                            width: 'auto',
+                            sorter: false,
+                            fixed: 'false',
+                            children: [
+                                {
+                                    dataIndex: 'col1-1',
+                                    title: '列一中一',
+                                    isShow: true,
+                                    align: 'left',
+                                    width: 'auto',
+                                    sorter: false,
+                                    fixed: 'false',
+                                    children: [
+                                        {
+                                            dataIndex: 'col1-1-1',
+                                            title: '列一中一中一',
+                                            isShow: true,
+                                            align: 'left',
+                                            width: 'auto',
+                                            sorter: false,
+                                            fixed: 'false',
+                                        },
+                                    ],
+                                },
+                                {
+                                    dataIndex: 'col1-1',
+                                    title: '列一中一',
+                                    isShow: true,
+                                    align: 'left',
+                                    width: 'auto',
+                                    sorter: false,
+                                    fixed: 'false',
+                                },
+                            ],
+                        },
+                        {
+                            dataIndex: 'col2',
+                            title: '列二',
+                            isShow: true,
+                            align: 'left',
+                            width: 'auto',
+                            sorter: true,
+                            fixed: 'false',
+                            children: [],
+                        },
+                        {
+                            dataIndex: 'col3',
+                            title: '列三',
+                            isShow: false,
+                            align: 'center',
+                            width: '200',
+                            sorter: false,
+                            fixed: 'false',
+                        },
+                    ],
+                    pager: {},
+                },
+            },
         })
     }
     addNewRecord = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'report/addNewRecord',
+            type: 'editableTable/addNewRecord',
             payload: { defaultRow },
         })
     }
     addData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'report/add',
-            payload: { record },
+            type: 'editableTable/add',
+            payload: {
+                fetchMethod: 'mockPromise',
+                fetchData: record,
+            },
         });
     }
     updateData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'report/update',
-            payload: { record },
+            type: 'editableTable/update',
+            payload: {
+                fetchMethod: 'mockPromise',
+                fetchData: record,
+            },
         });
     }
     deleteData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'report/delete',
-            payload: { record },
+            type: 'editableTable/delete',
+            payload: {
+                fetchMethod: 'mockPromise',
+                fetchData: record,
+            },
         });
     }
 
     changeCell = (msg) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'report/changeCell',
+            type: 'editableTable/changeCell',
             payload: msg,
         });
     }
@@ -156,7 +232,7 @@ export default class ConfigHeader extends PureComponent {
                 const { dispatch } = this.props
 
                 dispatch({
-                    type: 'report/loopDataAndTodo',
+                    type: 'editableTable/loopDataAndTodo',
                     callback: (curRecord) => {
                         if (curRecord.s_key === s_key) {
                             curRecord.children = curRecord.children || []
@@ -181,7 +257,7 @@ export default class ConfigHeader extends PureComponent {
     ])
 
     render() {
-        const { report: { dataSource } } = this.props
+        const { editableTable: { dataSource }, loading } = this.props
 
         return (
             <PageHeaderLayout>
@@ -189,6 +265,7 @@ export default class ConfigHeader extends PureComponent {
                     <div className={styles.tableList}>
                         <div className={styles.tableListForm} />
                         <EditableTable
+                            loading={loading}
                             dataSource={dataSource}
                             columns={this.state.columns}
                             queryData={this.queryData}

@@ -4,7 +4,7 @@ import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import { getRoutes } from '../utils/utils';
 
 const links = [
@@ -35,9 +35,9 @@ class UserLayout extends React.PureComponent {
     getPageTitle() {
         const { routerData, location } = this.props;
         const { pathname } = location;
-        let title = 'Ant Design Pro';
+        let title = '亦童集成平台';
         if (routerData[pathname] && routerData[pathname].name) {
-            title = `${routerData[pathname].name} - Ant Design Pro`;
+            title = `${routerData[pathname].name} - 亦童集成平台`;
         }
         return title;
     }
@@ -51,10 +51,10 @@ class UserLayout extends React.PureComponent {
                             <div className={styles.header}>
                                 <Link to="/">
                                     <img alt="logo" className={styles.logo} src={logo} />
-                                    <span className={styles.title}>Ant Design</span>
+                                    <span className={styles.title}>亦童集成平台</span>
                                 </Link>
                             </div>
-                            <div className={styles.desc}>亦童科技 是滨江区区最具影响力的科技公司</div>
+                            <div className={styles.desc}>杭州亦童科技有限公司</div>
                         </div>
                         <Switch>
                             {getRoutes(match.path, routerData).map(item => (

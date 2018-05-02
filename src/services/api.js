@@ -35,7 +35,7 @@ export const maRole = {
 }
 // 系统定时任务
 export const maTask = {
-    query: async () => request(`${baseUrl}/task/query`),
+    // query: async () => request(`${baseUrl}/task/query`),
     // delete
     // disable
     // enable

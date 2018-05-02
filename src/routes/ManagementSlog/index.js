@@ -4,9 +4,9 @@ import { Card } from 'antd';
 import EditableTable from 'components/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-@connect(({ maSlog, loading }) => ({
-    maSlog,
-    loading: loading.models.maSlog,
+@connect(({ editableTable, loading }) => ({
+    editableTable,
+    loading: loading.models.editableTable,
 }))
 export default class ManagementSlog extends PureComponent {
     constructor (props) {
@@ -65,13 +65,16 @@ export default class ManagementSlog extends PureComponent {
     queryData = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'maSlog/fetch',
+            type: 'editableTable/fetch',
+            payload: {
+                fetchMethod: 'maSlog.query',
+            },
         });
     }
 
     render() {
         const { columns } = this.state
-        const { maSlog, loading } = this.props;
+        const { editableTable: { dataSource }, loading } = this.props;
 
         return (
             <PageHeaderLayout>
@@ -81,7 +84,7 @@ export default class ManagementSlog extends PureComponent {
                         </div> */}
                         <EditableTable
                             loading={loading}
-                            dataSource={maSlog.data.list}
+                            dataSource={dataSource}
                             columns={columns}
                             queryData={this.queryData}
                         />

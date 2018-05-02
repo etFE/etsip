@@ -4,9 +4,9 @@ import { Card } from 'antd';
 import EditableTable from 'components/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-@connect(({ maUser, loading }) => ({
-    maUser,
-    loading: loading.models.maUser,
+@connect(({ editableTable, loading }) => ({
+    editableTable,
+    loading: loading.models.editableTable,
 }))
 export default class ManagementUser extends PureComponent {
     constructor (props) {
@@ -108,28 +108,76 @@ export default class ManagementUser extends PureComponent {
     queryData = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'maUser/fetch',
+            type: 'editableTable/fetch',
+            payload: {
+                fetchMethod: 'maUser.query',
+            },
         });
+    }
+    addNewRecord = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'editableTable/addNewRecord',
+            payload: {},
+        })
     }
     addData = (record) => {
         const { dispatch } = this.props;
-        console.log('addData', record)
         return dispatch({
-            type: 'maUser/add',
-            payload: { record },
+            type: 'editableTable/add',
+            payload: {
+                fetchMethod: 'maUser.add',
+                fetchData: record,
+            },
         });
     }
     updateData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'maUser/update',
-            payload: { record },
+            type: 'editableTable/update',
+            payload: {
+                fetchMethod: 'maUser.update',
+                fetchData: record,
+            },
         });
     }
 
+    deleteData = (record) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'editableTable/delete',
+            payload: {
+                fetchMethod: 'mockPromise',
+                fetchData: record,
+            },
+        });
+    }
+
+    changeCell = (msg) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'editableTable/changeCell',
+            payload: msg,
+        });
+    }
+
+    operations = (record) => ([
+        {
+            // text: () => {
+            // 写成动态的根据 record 执行不同的方法
+            // },
+            text: '禁用',
+            handleClick: () => {
+                // const { s_key } = record
+                // const { dispatch } = this.props
+                console.log('禁用')
+            },
+        },
+    ])
+
     render() {
         const { columns } = this.state
-        const { maUser, loading } = this.props;
+        const { editableTable: { dataSource }, loading } = this.props;
 
         return (
             <PageHeaderLayout>
@@ -140,11 +188,15 @@ export default class ManagementUser extends PureComponent {
                         <EditableTable
                             editable
                             loading={loading}
-                            dataSource={maUser.data ? maUser.data.list : []}
+                            dataSource={dataSource}
                             columns={columns}
                             queryData={this.queryData}
                             addData={this.addData}
                             updateData={this.updateData}
+                            deleteData={this.deleteData}
+                            addNewRecord={this.addNewRecord}
+                            operations={this.operations}
+                            changeCell={this.changeCell}
                         />
                     </div>
                 </Card>
