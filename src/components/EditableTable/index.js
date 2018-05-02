@@ -225,7 +225,7 @@ export default class EditableTable extends PureComponent {
 
     render () {
         const { dataSource, columns } = this.state
-        const { editable, loading } = this.props
+        const { editable, loading, buttonGroup } = this.props
         return (
             <div className={styles.editableTable}>
                 <div className={styles.editableButtonGroup}>
@@ -244,6 +244,7 @@ export default class EditableTable extends PureComponent {
                         >添加行
                         </Button>
                     ) : null}
+                    { buttonGroup }
                 </div>
                 <Table
                     bordered

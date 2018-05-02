@@ -1,13 +1,17 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import {
     Card,
     Button,
+    Modal,
+    Input,
 } from 'antd';
 import EditableTable from 'components/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './index.less';
+
+const { TextArea } = Input
 
 // const defaultRow = {
 //     dataIndex: '', // 字段名
@@ -97,6 +101,7 @@ export default class ConfigHeader extends PureComponent {
 
         this.state = {
             columns: cols,
+            jsonVisible: true,
         }
     }
 
@@ -256,8 +261,41 @@ export default class ConfigHeader extends PureComponent {
         },
     ])
 
+    // 查看数据格式
+    openJsonView = () => {
+        this.setState({
+            jsonVisible: true,
+        })
+    }
+    closeJsonView = () => {
+        this.setState({
+            jsonVisible: false,
+        })
+    }
+
+    jsonToHtml = (data) => {
+        let dataHtml = JSON.stringify(data)
+        dataHtml = dataHtml.replace(/,|"children":|\[{|{/g, '$&\n')
+        dataHtml = dataHtml.replace(/\}]|}/g, '\n$&')
+
+        return dataHtml
+    }
+
     render() {
         const { editableTable: { dataSource }, loading } = this.props
+        const buttonGroup = (
+            <Fragment>
+                <Button
+                    icon="profile"
+                    size="small"
+                    onClick={this.openJsonView}
+                >查看JSON
+                </Button>
+            </Fragment>
+        )
+
+        const dataJsonHtml = this.jsonToHtml(dataSource)
+
 
         return (
             <PageHeaderLayout>
@@ -275,10 +313,22 @@ export default class ConfigHeader extends PureComponent {
                             deleteData={this.deleteData}
                             changeCell={this.changeCell}
                             operations={this.operations}
+                            buttonGroup={buttonGroup}
                             editable
                         />
                     </div>
                 </Card>
+                <Modal
+                    title="JSON 格式"
+                    visible={this.state.jsonVisible}
+                    onCancel={this.closeJsonView}
+                    footer={null}
+                >
+                    <TextArea
+                        autosize
+                        value={dataJsonHtml}
+                    />
+                </Modal>
             </PageHeaderLayout>
         );
     }
