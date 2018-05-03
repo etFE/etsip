@@ -4,6 +4,25 @@ import { Card } from 'antd';
 import EditableTable from 'components/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
+const defaultRow = {
+    id: 2,
+    signState: 0,
+    lastSignTime: '',
+    createTime: '',
+    updateTime: '',
+    locked: false,
+    disabled: false,
+    loginIp: '',
+    loginCount: 0,
+    roles: null,
+    mods: null,
+    menus: null,
+    firstMenus: null,
+    secondMenus: null,
+    slat: 5,
+    password: '123456',
+}
+
 @connect(({ editableTable, loading }) => ({
     editableTable,
     loading: loading.models.editableTable,
@@ -21,20 +40,21 @@ export default class ManagementUser extends PureComponent {
                     editor: { type: 'text' },
                 },
                 {
-                    title: 'id',
-                    dataIndex: 'id',
-                    width: 100,
-                },
-                {
-                    title: 'nickname',
+                    title: '昵称',
                     dataIndex: 'nickname',
                     width: 100,
                     editor: { type: 'text' },
                 },
                 {
-                    title: 'roles',
+                    title: '角色',
                     dataIndex: 'roles',
                     width: 100,
+                },
+                {
+                    title: '密码',
+                    dataIndex: 'password',
+                    width: 100,
+                    editor: { type: 'text' },
                 },
                 {
                     title: 'loginCount',
@@ -42,18 +62,18 @@ export default class ManagementUser extends PureComponent {
                     width: 100,
                 },
                 {
-                    title: 'loginIp',
+                    title: '登录IP',
                     dataIndex: 'loginIp',
-                    width: 100,
-                },
-                {
-                    title: 'firstMenus',
-                    dataIndex: 'firstMenus',
                     width: 100,
                 },
                 {
                     title: 'menus',
                     dataIndex: 'menus',
+                    width: 100,
+                },
+                {
+                    title: 'firstMenus',
+                    dataIndex: 'firstMenus',
                     width: 100,
                 },
                 {
@@ -70,12 +90,13 @@ export default class ManagementUser extends PureComponent {
                     title: 'locked',
                     dataIndex: 'locked',
                     width: 100,
-                    editor: { type: 'text' },
+                    editor: { type: 'checkbox' },
                 },
                 {
                     title: 'disabled',
                     dataIndex: 'disabled',
                     width: 100,
+                    editor: { type: 'checkbox' },
                 },
                 {
                     title: 'signState',
@@ -83,12 +104,12 @@ export default class ManagementUser extends PureComponent {
                     width: 160,
                 },
                 {
-                    title: 'updateTime',
+                    title: '更新时间',
                     dataIndex: 'updateTime',
                     width: 160,
                 },
                 {
-                    title: 'lastSignTime',
+                    title: '最后登录时间',
                     dataIndex: 'lastSignTime',
                     width: 160,
                 },
@@ -118,7 +139,7 @@ export default class ManagementUser extends PureComponent {
         const { dispatch } = this.props;
         dispatch({
             type: 'editableTable/addNewRecord',
-            payload: {},
+            payload: { defaultRow },
         })
     }
     addData = (record) => {
@@ -163,14 +184,24 @@ export default class ManagementUser extends PureComponent {
 
     operations = (record) => ([
         {
-            // text: () => {
-            // 写成动态的根据 record 执行不同的方法
-            // },
-            text: '禁用',
+            text: () => {
+                return record.disabled ? '启用' : '禁用'
+            },
             handleClick: () => {
-                // const { s_key } = record
-                // const { dispatch } = this.props
-                console.log('禁用')
+                const { s_key, id } = record
+                const { dispatch } = this.props
+
+                dispatch({
+                    type: 'editableTable/fetchAndTodo',
+                    payload: {
+                        fetchMethod: 'maUser.disable',
+                        fetchData: { id },
+                    },
+                    callback: (res) => {
+
+                    },
+                })
+                console.log('禁用', s_key, id)
             },
         },
     ])

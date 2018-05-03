@@ -200,19 +200,21 @@ export class EditCellOperations extends PureComponent {
 
     render() {
         const { editable, operations } = this.props;
-        const otherOperations = operations.map((item) => (
-            item.hasTip ? (
-                <Popconfirm key={item.text} title={`确定${item.text}？`} onConfirm={item.handleClick}>
+        const otherOperations = operations.map((item) => {
+            const operationText = typeof item.text === 'function' ? item.text() : item.text
+
+            return item.hasTip ? (
+                <Popconfirm key={operationText} title={`确定${operationText}？`} onConfirm={item.handleClick}>
                     <div className={styles.devider}  />
-                    <span>{item.text}</span>
+                    <span>{operationText}</span>
                 </Popconfirm>
             ) : (
-                <Fragment key={item.text} >
+                <Fragment key={operationText} >
                     <div className={styles.devider}  />
-                    <span onClick={item.handleClick}>{item.text}</span>
+                    <span onClick={item.handleClick}>{operationText}</span>
                 </Fragment>
             )
-        ))
+        })
 
         return (
             <div className={`${styles.editableCell} ${styles.cellOperations}`}>

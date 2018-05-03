@@ -1,5 +1,6 @@
 import { maSlog, maUser, maMod, maRole, maTask, maMenu, maRep, report } from '../services/api';
 import { mockPromise } from '../utils/utils.js'
+import { loopAndSetKey, loopAndFilter, loopDataAndDo } from '../utils/editableTable.js'
 
 const methods = {
     mockPromise,
@@ -11,47 +12,6 @@ const methods = {
     maMenu,
     maRep,
     report,
-}
-
-// 遍历数据及子数据，增加s_key字段
-const loopAndSetKey = (data, prekey) => {
-    const dataSource = data.map((record, index) => {
-        record.s_key = prekey ? `${prekey}-${index+1}` : `${index+1}`
-
-        if (record.children) {
-            // if (record.children.length > 0) {
-            record.children = loopAndSetKey(record.children, record.s_key)
-            // } else {
-            //     delete record.children
-            // }
-        }
-        return record
-    })
-    return dataSource
-}
-
-// 遍历，过滤出key相同的数据
-const loopAndFilter = (data, s_key) => {
-    const dataSource = data.filter((item) => {
-        if (item.children) {
-            item.children = loopAndFilter(item.children, s_key)
-        }
-        return item.s_key !== s_key
-    })
-    return dataSource
-}
-
-// 递归数据，并做什么事情
-// 必须无副作用回调函数
-const loopDataAndDo = (data, callback) => {
-    data.forEach((record) => {
-        callback(record)
-
-        if (record.children) {
-            record.children = loopDataAndDo(record.children, callback)
-        }
-    })
-    return data
 }
 
 // 通过 外部传入的 链式字符串 找到链式的方法， 'maSlog.query'
@@ -133,17 +93,12 @@ export default {
         },
         // 自定义连接远程
         *fetchAndTodo({ payload, callback }, { call, put }) {
-            // const { fetchMethod, fetchData } = payload
-            // let response
-            // if (!fetchData.s_newrow) {
-            //     response = yield call(getMethod(fetchMethod), fetchData)
-            // }
-            // // if ((response && response.ok) || fetchData.s_newrow) {
-            // yield put({
-            //     type: 'deleteRecord',
-            //     payload: fetchData,
-            // })
-            // }
+            const { fetchMethod, fetchData } = payload
+            let response
+            if (!fetchData.s_newrow) {
+                response = yield call(getMethod(fetchMethod), fetchData)
+            }
+            callback(response)
         },
     },
 

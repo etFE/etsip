@@ -63,7 +63,6 @@ export default function request(url, options) {
             };
         }
     }
-
     return fetch(url, newOptions)
         .then(checkStatus)
         .then(response => {
@@ -73,9 +72,12 @@ export default function request(url, options) {
             return response.json().then(res => {
                 // 算是 响应的拦截器
                 if (res.ok === false) {
-                    message.error(res.msg)
+                    message.error(res.msg);
                 }
-                return res
+                if (res.error) {
+                    message.error('操作失败（自定义版）');
+                }
+                return res;
             });
         })
         .catch(e => {
