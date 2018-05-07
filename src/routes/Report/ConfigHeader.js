@@ -6,7 +6,7 @@ import {
     Modal,
     Input,
 } from 'antd';
-import EditableTable from 'components/EditableTable';
+import EditableTable from 'components/Table/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './index.less';
@@ -101,7 +101,7 @@ export default class ConfigHeader extends PureComponent {
 
         this.state = {
             columns: cols,
-            jsonVisible: true,
+            jsonVisible: false,
         }
     }
 
@@ -314,7 +314,6 @@ export default class ConfigHeader extends PureComponent {
                             changeCell={this.changeCell}
                             operations={this.operations}
                             buttonGroup={buttonGroup}
-                            editable
                         />
                     </div>
                 </Card>

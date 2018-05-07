@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Card } from 'antd';
-import EditableTable from 'components/EditableTable';
+import QueryTable from 'components/Table/QueryTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 @connect(({ editableTable, loading }) => ({
@@ -90,16 +90,12 @@ export default class ManagementSlog extends PureComponent {
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
-                    <div>
-                        {/* <div className={}>
-                        </div> */}
-                        <EditableTable
-                            loading={loading}
-                            dataSource={dataSource}
-                            columns={columns}
-                            queryData={this.queryData}
-                        />
-                    </div>
+                    <QueryTable
+                        loading={loading}
+                        dataSource={dataSource}
+                        columns={columns}
+                        queryData={this.queryData}
+                    />
                 </Card>
             </PageHeaderLayout>
         );

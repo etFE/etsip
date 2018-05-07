@@ -10,16 +10,14 @@ export const maSlog = {
 // 用户
 export const maUser = {
     query: async () => request(`${baseUrl}/user/query`),
-    add: async (rowData) => request(`${baseUrl}/user/add`, { method: 'POST', body: rowData }),
-    update: async (rowData) => request(`${baseUrl}/user/update`, { method: 'POST', body: rowData }),
-    delete: async (rowData) => request(`${baseUrl}/user/delete`, { method: 'POST', body: rowData }),
-    disable: async (rowData) => request(`${baseUrl}/user/disable`, { method: 'POST', body: rowData }),
-    enable: async (rowData) => request(`${baseUrl}/user/enable`, { method: 'POST', body: rowData }),
+    add: async (params) => request(`${baseUrl}/user/add`, { method: 'POST', body: params }),
+    update: async (params) => request(`${baseUrl}/user/update`, { method: 'POST', body: params }),
+    delete: async (params) => request(`${baseUrl}/user/delete`, { method: 'POST', body: params }),
+    disable: async (params) => request(`${baseUrl}/user/disable`, { method: 'POST', body: params }),
+    enable: async (params) => request(`${baseUrl}/user/enable`, { method: 'POST', body: params }),
     // index
     // count
     // error
-    // login
-    // loginPage
 }
 // 系统模块
 export const maMod = {
@@ -58,6 +56,10 @@ export const maRep = {
 // 报表
 export const report = {
     query: async () => request(`${baseUrl}/report/query`),
+}
+
+export const user = {
+    login: async (params) => request(`${baseUrl}/user/login`, { method: 'POST', body: params }),
 }
 
 // ----------------------------------------- //

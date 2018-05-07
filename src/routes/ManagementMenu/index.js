@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Card } from 'antd';
-import EditableTable from 'components/EditableTable';
+import EditableTable from 'components/Table/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 @connect(({ editableTable, loading }) => ({
@@ -155,7 +155,6 @@ export default class ManagementSlog extends PureComponent {
                         {/* <div className={}>
                         </div> */}
                         <EditableTable
-                            editable
                             loading={loading}
                             dataSource={dataSource}
                             columns={columns}

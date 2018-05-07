@@ -3,67 +3,67 @@ import { Input, Icon } from 'antd';
 import styles from './index.less';
 
 const map = {
-  UserName: {
-    component: Input,
-    props: {
-      size: 'large',
-      prefix: <Icon type="user" className={styles.prefixIcon} />,
-      placeholder: 'admin',
+    UserName: {
+        component: Input,
+        props: {
+            size: 'large',
+            prefix: <Icon type="user" className={styles.prefixIcon} />,
+            placeholder: '账号',
+        },
+        rules: [
+            {
+                required: true,
+                message: '请输入账号!',
+            },
+        ],
     },
-    rules: [
-      {
-        required: true,
-        message: 'Please enter username!',
-      },
-    ],
-  },
-  Password: {
-    component: Input,
-    props: {
-      size: 'large',
-      prefix: <Icon type="lock" className={styles.prefixIcon} />,
-      type: 'password',
-      placeholder: '888888',
+    Password: {
+        component: Input,
+        props: {
+            size: 'large',
+            prefix: <Icon type="lock" className={styles.prefixIcon} />,
+            type: 'password',
+            placeholder: '密码',
+        },
+        rules: [
+            {
+                required: true,
+                message: '请输入密码!',
+            },
+        ],
     },
-    rules: [
-      {
-        required: true,
-        message: 'Please enter password!',
-      },
-    ],
-  },
-  Mobile: {
-    component: Input,
-    props: {
-      size: 'large',
-      prefix: <Icon type="mobile" className={styles.prefixIcon} />,
-      placeholder: 'mobile number',
+    Mobile: {
+        component: Input,
+        props: {
+            size: 'large',
+            prefix: <Icon type="mobile" className={styles.prefixIcon} />,
+            placeholder: 'mobile number',
+        },
+        rules: [
+            {
+                required: true,
+                message: '请输入手机号码!',
+            },
+            {
+                pattern: /^1\d{10}$/,
+                message: '手机号码格式错误!',
+            },
+        ],
     },
-    rules: [
-      {
-        required: true,
-        message: 'Please enter mobile number!',
-      },
-      {
-        pattern: /^1\d{10}$/,
-        message: 'Wrong mobile number format!',
-      },
-    ],
-  },
-  Captcha: {
-    component: Input,
-    props: {
-      size: 'large',
-      prefix: <Icon type="mail" className={styles.prefixIcon} />,
-      placeholder: 'captcha',
+    Captcha: {
+        component: Input,
+        props: {
+            size: 'large',
+            prefix: <Icon type="mail" className={styles.prefixIcon} />,
+            placeholder: '验证码',
+        },
+        rules: [
+            {
+                required: true,
+                message: '请输入验证码!',
+            },
+        ],
     },
-    rules: [
-      {
-        required: true,
-        message: 'Please enter Captcha!',
-      },
-    ],
-  },
 };
 
 export default map;

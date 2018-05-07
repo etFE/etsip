@@ -3,7 +3,15 @@ import PropTypes from 'prop-types'
 import { Table, Button } from 'antd'
 import styles from './index.less'
 
-import { EditCellText, EditCellCheckbox, EditCellSelect, EditCellDatepicker, EditCellOperations } from '../EditableTableCell'
+import EditableTableCell from '../EditableTableCell'
+
+const {
+    EditCellText,
+    EditCellCheckbox,
+    EditCellSelect,
+    EditCellDatepicker,
+    EditCellOperations,
+} = EditableTableCell
 
 /**
  * 表格内编辑，双击行开启编辑

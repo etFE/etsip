@@ -7,7 +7,7 @@ let routerDataCache;
 
 const modelNotExisted = (app, model) =>
 // eslint-disable-next-line
-  !app._models.some(({ namespace }) => {
+    !app._models.some(({ namespace }) => {
         return namespace === model.substring(model.lastIndexOf('/') + 1);
     });
 
@@ -70,7 +70,7 @@ function getFlatMenuData(menus) {
 export const getRouterData = app => {
     const routerConfig = {
         '/': {
-            component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
+            component: dynamicWrapper(app, ['user'], () => import('../layouts/BasicLayout')),
         },
         '/management/slog': {
             component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementSlog')),
@@ -117,7 +117,7 @@ export const getRouterData = app => {
             component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
         },
         '/user/login': {
-            component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
+            component: dynamicWrapper(app, ['user'], () => import('../routes/User/Login')),
         },
         '/user/register': {
             component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),

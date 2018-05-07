@@ -1,0 +1,72 @@
+@import '~antd/lib/style/themes/default.less';
+
+:global {
+    tr > th.ant-table-selection-column,
+    tr > td.ant-table-selection-column {
+        min-width: 40px;
+        width: 40px;
+    }
+    // .ant-table-pagination {
+    //     margin-top: 24px;
+    // }
+
+    // 单元格不换行
+    .ant-table td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    // 解决固定右侧的悬浮列 击穿问题
+    .ant-table-fixed-right {
+        z-index: 1;
+    }
+
+    // 这两项样式，为了显示展开子集显示的
+    .ant-table-row-indent.indent-level-1 {
+        padding-left: 5px !important;
+    }
+    .ant-table-row-indent.indent-level-2 {
+        padding-left: 10px !important;
+    }
+    .ant-table-row-indent.indent-level-3 {
+        padding-left: 15px !important;
+    }
+    .ant-table-row-indent.indent-level-4 {
+        padding-left: 20px !important;
+    }
+    .ant-table-row-indent.indent-level-5 {
+        padding-left: 25px !important;
+    }
+    .ant-table-row-indent.indent-level-6 {
+        padding-left: 30px !important;
+    }
+    .ant-table-row-indent.indent-level-7 {
+        padding-left: 35px !important;
+    }
+    .ant-table-row-indent.indent-level-8 {
+        padding-left: 40px !important;
+    }
+    .ant-table-row-indent.indent-level-9 {
+        padding-left: 45px !important;
+    }
+    .ant-table-row-indent.indent-level-10 {
+        padding-left: 50px !important;
+    }
+
+    .ant-table-row.ant-table-row-level-1 {
+        background: #fafafa;
+    }
+    .ant-table-row.ant-table-row-level-3 {
+        background: #fafafa;
+    }
+    .ant-table-row.ant-table-row-level-5 {
+        background: #fafafa;
+    }
+    .ant-table-row.ant-table-row-level-7 {
+        background: #fafafa;
+    }
+    .ant-table-row.ant-table-row-level-9 {
+        background: #fafafa;
+    }
+}

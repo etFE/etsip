@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Card } from 'antd';
-import EditableTable from 'components/EditableTable';
+import EditableTable from 'components/Table/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 @connect(({ editableTable, loading }) => ({
@@ -89,22 +89,17 @@ export default class ManagementUser extends PureComponent {
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
-                    <div>
-                        {/* <div}>
-                        </div> */}
-                        <EditableTable
-                            editable
-                            loading={loading}
-                            dataSource={dataSource}
-                            columns={columns}
-                            queryData={this.queryData}
-                            addData={this.addData}
-                            updateData={this.updateData}
-                            deleteData={this.deleteData}
-                            addNewRecord={this.addNewRecord}
-                            changeCell={this.changeCell}
-                        />
-                    </div>
+                    <EditableTable
+                        loading={loading}
+                        dataSource={dataSource}
+                        columns={columns}
+                        queryData={this.queryData}
+                        addData={this.addData}
+                        updateData={this.updateData}
+                        deleteData={this.deleteData}
+                        addNewRecord={this.addNewRecord}
+                        changeCell={this.changeCell}
+                    />
                 </Card>
             </PageHeaderLayout>
         );
