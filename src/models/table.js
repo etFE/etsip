@@ -25,7 +25,7 @@ const getMethod = (fetchMethod) => {
 }
 
 export default {
-    namespace: 'editableTable',
+    namespace: 'table',
     state: {
         dataSource: [],
         pagination: {},

@@ -37,15 +37,9 @@ const menuData = [
         path: 'management/rep',
     },
     {
-        name: '报表',
+        name: '自定义报表',
         icon: 'area-chart',
         path: 'report',
-        children: [
-            {
-                name: '表头配置',
-                path: 'configHeader',
-            },
-        ],
     },
 ]
 

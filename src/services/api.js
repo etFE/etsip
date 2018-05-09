@@ -55,7 +55,10 @@ export const maRep = {
 
 // 报表
 export const report = {
-    query: async () => request(`${baseUrl}/report/query`),
+    query: async () => request(`${baseUrl}/custom/report/query`),
+    add: async () => request(`${baseUrl}/custom/report/add`),
+    update: async () => request(`${baseUrl}/custom/report/update`),
+    delete: async () => request(`${baseUrl}/custom/report/delete`),
 }
 
 export const user = {

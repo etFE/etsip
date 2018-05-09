@@ -73,28 +73,44 @@ export const getRouterData = app => {
             component: dynamicWrapper(app, ['user'], () => import('../layouts/BasicLayout')),
         },
         '/management/slog': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementSlog')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementSlog')),
         },
         '/management/user': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementUser')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementUser')),
         },
         '/management/mod': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementMod')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementMod')),
         },
         '/management/role': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementRole')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementRole')),
         },
         '/management/task': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementTask')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementTask')),
         },
         '/management/menu': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementMenu')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementMenu')),
         },
         '/management/rep': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/ManagementRep')),
+            component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementRep')),
         },
-        '/report/configHeader': {
-            component: dynamicWrapper(app, ['editableTable'], () => import('../routes/Report/ConfigHeader')),
+
+        '/report': {
+            component: dynamicWrapper(app, ['report'], () => import('../routes/Report/ReportLayout')),
+        },
+        '/report/add': {
+            component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/index')),
+        },
+        '/report/add/step1': {
+            component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/Step1')),
+        },
+        '/report/add/step2': {
+            component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/Step2')),
+        },
+        '/report/add/step3': {
+            component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/Step3')),
+        },
+        '/report/:id': {
+            component: dynamicWrapper(app, [], () => import('../routes/Report/ReportContent')),
         },
 
 

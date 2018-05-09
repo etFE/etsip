@@ -1,0 +1,24 @@
+
+.container {
+    padding-right: 10px;
+
+
+    .sideButton {
+        text-align: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    :global {
+        .ant-tree {
+            max-height: 500px;
+            overflow-x: auto;
+
+            li {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+    }
+}

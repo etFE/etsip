@@ -4,9 +4,9 @@ import { Card } from 'antd';
 import EditableTable from 'components/Table/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-@connect(({ editableTable, loading }) => ({
-    editableTable,
-    loading: loading.models.editableTable,
+@connect(({ table, loading }) => ({
+    table,
+    loading: loading.models.table,
 }))
 export default class ManagementSlog extends PureComponent {
     constructor (props) {
@@ -90,7 +90,7 @@ export default class ManagementSlog extends PureComponent {
     queryData = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/fetch',
+            type: 'table/fetch',
             payload: {
                 fetchMethod: 'maMenu.query',
             },
@@ -100,14 +100,14 @@ export default class ManagementSlog extends PureComponent {
     addNewRecord = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/addNewRecord',
+            type: 'table/addNewRecord',
             payload: {},
         })
     }
     addData = (record) => {
         const { dispatch } = this.props;
         return dispatch({
-            type: 'editableTable/add',
+            type: 'table/add',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: record,
@@ -117,7 +117,7 @@ export default class ManagementSlog extends PureComponent {
     updateData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/update',
+            type: 'table/update',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: record,
@@ -128,7 +128,7 @@ export default class ManagementSlog extends PureComponent {
     deleteData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/delete',
+            type: 'table/delete',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: record,
@@ -139,14 +139,14 @@ export default class ManagementSlog extends PureComponent {
     changeCell = (msg) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/changeCell',
+            type: 'table/changeCell',
             payload: msg,
         });
     }
 
     render() {
         const { columns } = this.state
-        const { editableTable: { dataSource }, loading } = this.props;
+        const { table: { dataSource }, loading } = this.props;
 
         return (
             <PageHeaderLayout>

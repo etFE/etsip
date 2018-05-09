@@ -9,7 +9,7 @@ import {
 import EditableTable from 'components/Table/EditableTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-import styles from './index.less';
+import styles from './ConfigHeader.less';
 
 const { TextArea } = Input
 
@@ -91,9 +91,9 @@ const cols = [
     },
 ]
 
-@connect(({ editableTable, loading }) => ({
-    editableTable,
-    loading: loading.models.editableTable,
+@connect(({ table, loading }) => ({
+    table,
+    loading: loading.models.table,
 }))
 export default class ConfigHeader extends PureComponent {
     constructor (props) {
@@ -112,7 +112,7 @@ export default class ConfigHeader extends PureComponent {
     queryData = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/fetch',
+            type: 'table/fetch',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: {
@@ -185,14 +185,14 @@ export default class ConfigHeader extends PureComponent {
     addNewRecord = () => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/addNewRecord',
+            type: 'table/addNewRecord',
             payload: { defaultRow },
         })
     }
     addData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/add',
+            type: 'table/add',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: record,
@@ -202,7 +202,7 @@ export default class ConfigHeader extends PureComponent {
     updateData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/update',
+            type: 'table/update',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: record,
@@ -212,7 +212,7 @@ export default class ConfigHeader extends PureComponent {
     deleteData = (record) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/delete',
+            type: 'table/delete',
             payload: {
                 fetchMethod: 'mockPromise',
                 fetchData: record,
@@ -223,7 +223,7 @@ export default class ConfigHeader extends PureComponent {
     changeCell = (msg) => {
         const { dispatch } = this.props;
         dispatch({
-            type: 'editableTable/changeCell',
+            type: 'table/changeCell',
             payload: msg,
         });
     }
@@ -237,7 +237,7 @@ export default class ConfigHeader extends PureComponent {
                 const { dispatch } = this.props
 
                 dispatch({
-                    type: 'editableTable/loopDataAndTodo',
+                    type: 'table/loopDataAndTodo',
                     callback: (curRecord) => {
                         if (curRecord.s_key === s_key) {
                             curRecord.children = curRecord.children || []
@@ -282,7 +282,7 @@ export default class ConfigHeader extends PureComponent {
     }
 
     render() {
-        const { editableTable: { dataSource }, loading } = this.props
+        const { table: { dataSource }, loading } = this.props
         const buttonGroup = (
             <Fragment>
                 <Button
