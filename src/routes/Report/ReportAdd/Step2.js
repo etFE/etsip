@@ -14,26 +14,24 @@ export default class Step2 extends PureComponent {
 
     componentDidMount () {
         const { report, dispatch } = this.props
-        const sql = report.fields.reportSql
+        const sql = report.fields.reportBody
 
         if (!sql) {
             dispatch(routerRedux.push('step1'))
+        } else {
+            dispatch({
+                type: 'report/generateCustomForm',
+            })
         }
+
     }
 
-    generateData = () => {
-        const { report } = this.props
-        const sql = report.fields.reportSql
-        const res = sql.match(/@[a-zA-Z_]+/g)
-        const dataSource = []
-
-        res.forEach((item, index) => {
-            const id = item.split('@')[1]
-            dataSource.push(
-                { id, text: id, type: 'text', s_editable: true, s_key: index + 1 }
-            )
+    handleChangeTable = (params) => {
+        const { dispatch } = this.props
+        dispatch({
+            type: 'report/changeCustomForm',
+            payload: params,
         })
-        return dataSource
     }
 
     handleGoPrev = () => {
@@ -43,13 +41,25 @@ export default class Step2 extends PureComponent {
         )
     }
     handleGoNext = () => {
-
+        const { dispatch, report } = this.props
+        dispatch({
+            type: 'report/addNewReport',
+            payload: {
+                fields: report.fields,
+                customForm: report.customForm,
+            },
+        })
     }
 
     render () {
+        const { report: { customForm } } = this.props
+
         return (
             <div className={styles.container}>
-                <ConfigForm dataSource={this.generateData()} />
+                <ConfigForm
+                    dataSource={customForm}
+                    changeCell={this.handleChangeTable}
+                />
                 <div className={styles.buttonGroup}>
                     <Button onClick={this.handleGoPrev} >上一步</Button>
                     <Button

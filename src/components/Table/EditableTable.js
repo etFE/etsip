@@ -140,31 +140,34 @@ export default class EditableTable extends PureComponent {
     }
 
     render () {
-        const { dataSource, loading, buttonGroup } = this.props
+        const { dataSource, pagination, loading, buttonGroup } = this.props
         const columns = this.initColumns()
 
         return (
             <div className={styles.editableTable}>
-                <div className={styles.buttonGroup}>
-                    <Button
-                        type="primary"
-                        icon="search"
-                        size="small"
-                        onClick={this.handleQuery}
-                    >查询
-                    </Button>
-                    <Button
-                        icon="plus-circle-o"
-                        size="small"
-                        onClick={this.handleRowAdd}
-                    >添加行
-                    </Button>
-                    { buttonGroup }
-                </div>
+                {buttonGroup !== false ? (
+                    <div className={styles.buttonGroup}>
+                        <Button
+                            type="primary"
+                            icon="search"
+                            size="small"
+                            onClick={this.handleQuery}
+                        >查询
+                        </Button>
+                        <Button
+                            icon="plus-circle-o"
+                            size="small"
+                            onClick={this.handleRowAdd}
+                        >添加行
+                        </Button>
+                        { buttonGroup }
+                    </div>
+                ) : null}
                 <BasicTable
                     loading={loading}
                     dataSource={dataSource}
                     columns={columns}
+                    pagination={pagination}
                     onRow={(record) => {
                         return {
                             onDoubleClick: () => {
@@ -187,6 +190,7 @@ EditableTable.defaultProps = {
     updateData: () => {},
     deleteData: () => {},
     changeCell: () => {},
+    // pagination: {},
 }
 EditableTable.propTypes = {
     dataSource: PropTypes.array.isRequired, // 数据
@@ -200,4 +204,5 @@ EditableTable.propTypes = {
     updateData: PropTypes.func, // 更新数据
     deleteData: PropTypes.func, // 删除数据
     changeCell: PropTypes.func, // 单元格更新
+    // pagination: PropTypes.object
 }

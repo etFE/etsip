@@ -6,7 +6,7 @@ import './BasicTable.less'
 
 export default class BasicTable extends PureComponent {
     render () {
-        const { loading, dataSource, columns } = this.props
+        const { loading, dataSource, pagination, columns } = this.props
         return (
             <Table
                 bordered
@@ -14,6 +14,7 @@ export default class BasicTable extends PureComponent {
                 loading={loading}
                 dataSource={dataSource}
                 columns={columns}
+                pagination={pagination}
                 size="middle"
                 scroll={{ x: true }}
             />
@@ -25,4 +26,5 @@ BasicTable.propTypes = {
     dataSource: PropTypes.array.isRequired, // 数据
     columns: PropTypes.array.isRequired, // 列
     loading: PropTypes.bool.isRequired,
+    // pagination: PropTypes
 }

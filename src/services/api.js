@@ -56,9 +56,12 @@ export const maRep = {
 // 报表
 export const report = {
     query: async () => request(`${baseUrl}/custom/report/query`),
-    add: async () => request(`${baseUrl}/custom/report/add`),
-    update: async () => request(`${baseUrl}/custom/report/update`),
-    delete: async () => request(`${baseUrl}/custom/report/delete`),
+    add: async (params) => request(`${baseUrl}/custom/report/add`, { method: 'POST', body: params }),
+    update: async (params) => request(`${baseUrl}/custom/report/update`, { method: 'POST', body: params }),
+    delete: async (params) => request(`${baseUrl}/custom/report/delete`, { method: 'POST', body: params }),
+
+    // 添加修改自定义查询条件的表单
+    addOrEditWhere: async (params) => request(`${baseUrl}/custom/report/addOrEditWhere`, { method: 'POST', body: params }),
 }
 
 export const user = {

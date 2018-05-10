@@ -35,6 +35,10 @@ export default class ReportLayout extends React.PureComponent {
         const { dispatch, location } = this.props
         const path = `/report/${reportKey}`
         if (reportKey && location.pathname !== path) {
+            dispatch({
+                type: 'report/changeCurrentReport',
+                payload: reportKey,
+            })
             dispatch(
                 routerRedux.push(path)
             )
@@ -48,11 +52,15 @@ export default class ReportLayout extends React.PureComponent {
             dispatch(
                 routerRedux.push('/report/add')
             )
+            dispatch({
+                type: 'report/changeCurrentReport',
+                payload: null,
+            })
         }
     }
 
     render () {
-        const { report: { reports }, loading, match, routerData } = this.props
+        const { report: { reports, curReportCode }, loading, match, routerData } = this.props
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
@@ -61,6 +69,7 @@ export default class ReportLayout extends React.PureComponent {
                             <div className={styles.side}>
                                 <ReportList
                                     reports={reports}
+                                    curReportCode={curReportCode}
                                     selectReport={this.selectReport}
                                     addReport={this.addReport}
                                 />

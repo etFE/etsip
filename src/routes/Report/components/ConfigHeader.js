@@ -1,13 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import {
-    Card,
     Button,
     Modal,
     Input,
 } from 'antd';
 import EditableTable from 'components/Table/EditableTable';
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './ConfigHeader.less';
 
@@ -57,9 +55,9 @@ const cols = [
         editor: {
             type: 'select',
             options: [
-                { value: 'left', text: 'left' },
-                { value: 'right', text: 'right' },
-                { value: 'center', text: 'center' },
+                { value: 'left', text: '向左对齐' },
+                { value: 'right', text: '向右对齐' },
+                { value: 'center', text: '居中' },
             ],
         },
         width: 120,
@@ -101,7 +99,7 @@ export default class ConfigHeader extends PureComponent {
 
         this.state = {
             columns: cols,
-            jsonVisible: false,
+            // jsonVisible: false,
         }
     }
 
@@ -262,62 +260,68 @@ export default class ConfigHeader extends PureComponent {
     ])
 
     // 查看数据格式
-    openJsonView = () => {
-        this.setState({
-            jsonVisible: true,
-        })
-    }
-    closeJsonView = () => {
-        this.setState({
-            jsonVisible: false,
-        })
-    }
+    // openJsonView = () => {
+    //     this.setState({
+    //         jsonVisible: true,
+    //     })
+    // }
+    // closeJsonView = () => {
+    //     this.setState({
+    //         jsonVisible: false,
+    //     })
+    // }
 
-    jsonToHtml = (data) => {
-        let dataHtml = JSON.stringify(data)
-        dataHtml = dataHtml.replace(/,|"children":|\[{|{/g, '$&\n')
-        dataHtml = dataHtml.replace(/\}]|}/g, '\n$&')
+    // jsonToHtml = (data) => {
+    //     let dataHtml = JSON.stringify(data)
+    //     dataHtml = dataHtml.replace(/,|"children":|\[{|{/g, '$&\n')
+    //     dataHtml = dataHtml.replace(/\}]|}/g, '\n$&')
 
-        return dataHtml
-    }
+    //     return dataHtml
+    // }
 
     render() {
         const { table: { dataSource }, loading } = this.props
-        const buttonGroup = (
-            <Fragment>
-                <Button
-                    icon="profile"
-                    size="small"
-                    onClick={this.openJsonView}
-                >查看JSON
-                </Button>
-            </Fragment>
-        )
+        // const buttonGroup = (
+        //     <Fragment>
+        //         <Button
+        //             icon="profile"
+        //             size="small"
+        //             onClick={this.openJsonView}
+        //         >查看JSON
+        //         </Button>
+        //     </Fragment>
+        // )
 
-        const dataJsonHtml = this.jsonToHtml(dataSource)
+        // const dataJsonHtml = this.jsonToHtml(dataSource)
 
 
         return (
-            <PageHeaderLayout>
-                <Card bordered={false}>
-                    <div className={styles.tableList}>
-                        <div className={styles.tableListForm} />
-                        <EditableTable
-                            loading={loading}
-                            dataSource={dataSource}
-                            columns={this.state.columns}
-                            queryData={this.queryData}
-                            addNewRecord={this.addNewRecord}
-                            addData={this.addData}
-                            updateData={this.updateData}
-                            deleteData={this.deleteData}
-                            changeCell={this.changeCell}
-                            operations={this.operations}
-                            buttonGroup={buttonGroup}
-                        />
-                    </div>
-                </Card>
-                <Modal
+            <div className={styles.container}>
+                <div className={styles.buttonGroup}>
+                    <Button
+                        size="small"
+                        onClick={this.queryData}
+                    >自动生成
+                    </Button>
+                    <Button
+                        size="small"
+                        onClick={this.addNewRecord}
+                    >添加行
+                    </Button>
+                </div>
+                <EditableTable
+                    loading={loading}
+                    dataSource={dataSource}
+                    columns={this.state.columns}
+                    addData={this.addData}
+                    updateData={this.updateData}
+                    deleteData={this.deleteData}
+                    changeCell={this.changeCell}
+                    operations={this.operations}
+                    buttonGroup={false}
+                    pagination={false}
+                />
+                {/* <Modal
                     title="JSON 格式"
                     visible={this.state.jsonVisible}
                     onCancel={this.closeJsonView}
@@ -327,8 +331,8 @@ export default class ConfigHeader extends PureComponent {
                         autosize
                         value={dataJsonHtml}
                     />
-                </Modal>
-            </PageHeaderLayout>
+                </Modal> */}
+            </div>
         );
     }
 }

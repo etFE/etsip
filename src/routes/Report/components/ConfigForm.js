@@ -19,7 +19,7 @@ const columns = [
         editor: {
             type: 'select',
             options: [
-                { value: 'text', text: '文本框' },
+                { value: 'input', text: '文本框' },
                 { value: 'select', text: '下拉框' },
                 { value: 'date', text: '日期框' },
                 { value: 'checkbox', text: '复选框' },
@@ -34,6 +34,7 @@ export default class ConfigForm extends PureComponent {
         return (
             <CustomTable
                 editable
+                changeCell={this.props.changeCell}
                 dataSource={this.props.dataSource}
                 columns={columns}
             />
@@ -43,4 +44,5 @@ export default class ConfigForm extends PureComponent {
 
 ConfigForm.propTypes = {
     dataSource: PropTypes.array.isRequired,
+    changeCell: PropTypes.func.isRequired,
 }

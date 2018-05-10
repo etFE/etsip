@@ -21,7 +21,7 @@ const CustomizedForm = (props) => {
             </FormItem>
 
             <FormItem label="SQL体" style={{marginTop: '10px'}}>
-                {getFieldDecorator('reportSql', {
+                {getFieldDecorator('reportBody', {
                     rules: [{ required: true, message: 'SQL必填！' }],
                 })(<TextArea rows="4" style={{width: '500px'}} />)}
             </FormItem>
@@ -43,9 +43,9 @@ const AddForm = Form.create({
                 ...props.reportName,
                 value: props.reportName.value,
             }),
-            reportSql: Form.createFormField({
-                ...props.reportSql,
-                value: props.reportSql.value,
+            reportBody: Form.createFormField({
+                ...props.reportBody,
+                value: props.reportBody.value,
             }),
         };
     },

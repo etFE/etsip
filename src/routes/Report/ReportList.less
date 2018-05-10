@@ -2,7 +2,6 @@
 .container {
     padding-right: 10px;
 
-
     .sideButton {
         text-align: center;
         padding-bottom: 10px;
@@ -10,14 +9,13 @@
     }
 
     :global {
-        .ant-tree {
-            max-height: 500px;
+        .ant-menu {
+            max-height: 300px;
             overflow-x: auto;
 
-            li {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
+            li.ant-menu-item {
+                margin: 0;
+                padding: 0 5px;
             }
         }
     }
