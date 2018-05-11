@@ -27,7 +27,7 @@ export default class ReportLayout extends React.PureComponent {
     queryReports () {
         const { dispatch } = this.props
         dispatch({
-            type: 'report/fetchReports',
+            type: 'report/fetchReportList',
         })
     }
 
@@ -35,10 +35,12 @@ export default class ReportLayout extends React.PureComponent {
         const { dispatch, location } = this.props
         const path = `/report/${reportKey}`
         if (reportKey && location.pathname !== path) {
+            // 设置active
             dispatch({
                 type: 'report/changeCurrentReport',
                 payload: reportKey,
             })
+            // 跳转路由
             dispatch(
                 routerRedux.push(path)
             )
@@ -49,6 +51,9 @@ export default class ReportLayout extends React.PureComponent {
         const { dispatch, location } = this.props
 
         if (location.pathname !== '/report/add') {
+            dispatch({
+                type: 'report/clearFields',
+            })
             dispatch(
                 routerRedux.push('/report/add')
             )
@@ -60,7 +65,9 @@ export default class ReportLayout extends React.PureComponent {
     }
 
     render () {
-        const { report: { reports, curReportCode }, loading, match, routerData } = this.props
+        const { report: { reportList, currentReport }, loading, match, routerData } = this.props
+        const redirectRoute = currentReport.reportCode ? `/report/${currentReport.reportCode}` : '/report/add'
+
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
@@ -68,8 +75,8 @@ export default class ReportLayout extends React.PureComponent {
                         <div className={styles.container}>
                             <div className={styles.side}>
                                 <ReportList
-                                    reports={reports}
-                                    curReportCode={curReportCode}
+                                    reports={reportList}
+                                    reportCode={currentReport.reportCode}
                                     selectReport={this.selectReport}
                                     addReport={this.addReport}
                                 />
@@ -84,7 +91,7 @@ export default class ReportLayout extends React.PureComponent {
                                             exact={item.exact}
                                         />
                                     ))}
-                                    <Redirect exact from="/report" to="/report/add" />
+                                    <Redirect exact from="/report" to={redirectRoute} />
                                 </Switch>
                             </div>
                         </div>

@@ -7,7 +7,7 @@ import styles from './ReportList.less'
 
 export default class ReportList extends PureComponent {
     render () {
-        const { reports, curReportCode } = this.props
+        const { reports, reportCode } = this.props
 
         return (
             <div className={styles.container}>
@@ -19,9 +19,9 @@ export default class ReportList extends PureComponent {
                     </Button>
                 </div>
                 <Menu
-                    selectedKeys={[curReportCode]}
-                    onSelect={(item) => {
-                        this.props.selectReport(item.key)
+                    selectedKeys={[reportCode]}
+                    onSelect={({ key }) => {
+                        this.props.selectReport(key)
                     }}
                 >
                     {reports.map((item) => (
@@ -42,11 +42,11 @@ export default class ReportList extends PureComponent {
 ReportList.defaultProps = {
     selectReport: () => {},
     addReport: () => {},
-    curReportCode: null,
+    reportCode: null,
 }
 ReportList.propTypes = {
     reports: PropTypes.array.isRequired,
     selectReport: PropTypes.func,
     addReport: PropTypes.func,
-    curReportCode: PropTypes.string,
+    reportCode: PropTypes.string,
 }

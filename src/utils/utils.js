@@ -164,6 +164,6 @@ export const mockPromise = (data) => (
     new Promise((resolve) => {
         setTimeout(() => {
             resolve(data)
-        }, 1000);
+        }, 500);
     })
 )
