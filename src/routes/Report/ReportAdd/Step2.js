@@ -7,29 +7,23 @@ import ConfigForm from '../components/ConfigForm'
 
 import styles from './step.less'
 
-@connect(({report}) => ({
-    report,
+@connect(({reportNew}) => ({
+    reportNew,
 }))
 export default class Step2 extends PureComponent {
 
     componentDidMount () {
-        const { report, dispatch } = this.props
-        const sql = report.fields.reportBody
+        const { reportNew: { customForm } } = this.props
 
-        if (!sql) {
-            dispatch(routerRedux.push('step1'))
-        } else {
-            dispatch({
-                type: 'report/generateCustomForm',
-            })
+        if (customForm && customForm.length === 0) {
+            this.handleGoPrev()
         }
-
     }
 
     handleChangeTable = (params) => {
         const { dispatch } = this.props
         dispatch({
-            type: 'report/changeCustomForm',
+            type: 'reportNew/changeCustomForm',
             payload: params,
         })
     }
@@ -40,19 +34,21 @@ export default class Step2 extends PureComponent {
             routerRedux.push('step1')
         )
     }
+
     handleGoNext = () => {
-        const { dispatch, report } = this.props
+        const { dispatch, reportNew } = this.props
         dispatch({
-            type: 'report/addNewReport',
+            type: 'reportNew/fetchAddCustomForm',
             payload: {
-                fields: report.fields,
-                customForm: report.customForm,
+                reportCode: reportNew.fields.reportCode,
+                modCode: reportNew.fields.mod_code,
+                whereJson: reportNew.customForm,
             },
         })
     }
 
     render () {
-        const { report: { customForm } } = this.props
+        const { reportNew: { customForm } } = this.props
 
         return (
             <div className={styles.container}>
@@ -65,7 +61,7 @@ export default class Step2 extends PureComponent {
                     <Button
                         type="primary"
                         onClick={this.handleGoNext}
-                    >下一步
+                    >保存并下一步
                     </Button>
                 </div>
             </div>

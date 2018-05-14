@@ -92,7 +92,7 @@ export default class ReportContent extends PureComponent {
         return (
             <div className="container">
                 <div className={styles.header}>
-                    <h3 className={styles.title}>{currentReport.reportName} (预览)</h3>
+                    <h3 className={styles.title}>{currentReport.reportName}</h3>
                     <div className={styles.headerButtons}>
                         <Button
                             size="small"

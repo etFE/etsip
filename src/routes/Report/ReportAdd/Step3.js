@@ -6,8 +6,8 @@ import { Button } from 'antd'
 import ConfigHeader from '../components/ConfigHeader'
 import styles from './step.less'
 
-@connect(({report}) => ({
-    report,
+@connect(({reportNew}) => ({
+    reportNew,
 }))
 export default class Step3 extends PureComponent {
     componentDidMount () {
@@ -24,9 +24,13 @@ export default class Step3 extends PureComponent {
     }
 
     render () {
+        const { reportNew: { customHeader } } = this.props
+
         return (
             <div className={styles.container}>
-                <ConfigHeader />
+                <ConfigHeader
+                    customData={customHeader}
+                />
                 <div className={styles.buttonGroup}>
                     <Button
                         size="small"

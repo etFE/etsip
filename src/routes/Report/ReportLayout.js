@@ -8,18 +8,12 @@ import ReportList from './ReportList'
 import { getRoutes } from '../../utils/utils';
 import styles from './ReportLayout.less'
 
-@connect(({ report, loading }) => ({
+@connect(({ report, reportNew, loading }) => ({
     report,
-    loading: loading.models.report,
+    reportNew,
+    loading: loading.models.reportNew || loading.models.report,
 }))
 export default class ReportLayout extends React.PureComponent {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-        }
-    }
-
     componentDidMount () {
         this.queryReports()
     }
@@ -51,12 +45,15 @@ export default class ReportLayout extends React.PureComponent {
         const { dispatch, location } = this.props
 
         if (location.pathname !== '/report/add') {
+            // 清空状态
             dispatch({
-                type: 'report/clearFields',
+                type: 'reportNew/clearStore',
             })
+            // 跳转路由
             dispatch(
                 routerRedux.push('/report/add')
             )
+            // 设置active为空
             dispatch({
                 type: 'report/changeCurrentReport',
                 payload: null,

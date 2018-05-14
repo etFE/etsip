@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import { routerRedux } from 'dva/router'
 
 import { report } from '../services/api';
@@ -15,12 +16,6 @@ export default {
             columns: [],
             dataSource: [],
         },
-        fields: {
-            reportCode: '',
-            reportName: '',
-            reportBody: '',
-        },
-        customForm: [],
     },
 
     effects: {
@@ -38,7 +33,7 @@ export default {
                 payload: res,
             });
         },
-
+        // 查询其中一个报表的所有数据
         *fetchReport(_, {call, put}) {
             // 自定义查询条件
             const formData = yield call(mockPromise, [
@@ -50,7 +45,7 @@ export default {
                         { text: '设计部门', id: 'ds' },
                     ],
                 },
-                { text: '是否吃饭', id: 'isEat', type: 'checkbox' },
+                { text: '是否', id: 'isEat', type: 'checkbox' },
                 { text: '什么时候', id: 'date', type: 'datepicker' },
             ])
             const columns = yield call(mockPromise, [
@@ -64,18 +59,6 @@ export default {
                     columns,
                 },
             })
-        },
-
-        // 添加新报表 step2
-        *addNewReport({ payload }, {call, put}) {
-            // 保存基本信息
-            const resBasic = yield call(report.add, payload.fields)
-            // 保存自定义表单
-            const resForm = yield call(report.addOrEditWhere, payload.customForm)
-
-            if (resBasic && resForm) {
-                yield put(routerRedux.push('step3'))
-            }
         },
     },
 
@@ -110,57 +93,6 @@ export default {
                     formData: payload.formData,
                     columns: payload.columns,
                 },
-            }
-        },
-
-        // 新增报表数据 step2
-        saveNewReport (state, action) {
-            return {
-                ...state,
-                fields: action.payload,
-            }
-        },
-        // 通过sql，生成自定义表单数据 step2
-        generateCustomForm (state) {
-            const { reportBody } = state.fields
-            const paramArray = reportBody.match(/@[a-zA-Z_]+/g)
-            const customForm = []
-            if (paramArray) {
-                paramArray.forEach((item, index) => {
-                    const id = item.split('@')[1]
-                    customForm.push(
-                        { id, text: id, type: 'text', s_editable: true, s_key: index + 1 }
-                    )
-                })
-            }
-            return {
-                ...state,
-                customForm,
-            }
-        },
-        clearFields (state) {
-            return {
-                ...state,
-                fields: {
-                    reportCode: '',
-                    reportName: '',
-                    reportBody: '',
-                },
-            }
-        },
-        // 改变表单数据 step2
-        changeCustomForm (state, action) {
-            const { payload: { key, dataIndex, value } } = action
-            const dataSource = [...state.customForm]
-            dataSource.forEach((item) => {
-                if (item.s_key === key) {
-                    item[dataIndex] = value
-                }
-            })
-
-            return {
-                ...state,
-                customForm: dataSource,
             }
         },
     },

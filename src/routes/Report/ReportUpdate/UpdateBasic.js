@@ -3,7 +3,7 @@ import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import { Button } from 'antd'
 
-import AddForm from '../components/BasicForm'
+import BasicForm from '../components/BasicForm'
 
 import styles from './step.less'
 
@@ -56,7 +56,7 @@ export default class Step1 extends PureComponent {
 
         return (
             <div className={styles.container}>
-                <AddForm
+                <BasicForm
                     {...fields}
                     ref={ref => {this.form = ref}}
                     onChange={this.handleFormChange}

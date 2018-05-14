@@ -95,7 +95,7 @@ export const getRouterData = app => {
         },
 
         '/report': {
-            component: dynamicWrapper(app, ['report', 'table'], () => import('../routes/Report/ReportLayout')),
+            component: dynamicWrapper(app, ['report', 'reportNew','table'], () => import('../routes/Report/ReportLayout')),
         },
         '/report/add': {
             component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/index')),

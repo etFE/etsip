@@ -2,14 +2,14 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import {
     Button,
-    Modal,
-    Input,
+    // Modal,
+    // Input,
 } from 'antd';
 import EditableTable from 'components/Table/EditableTable';
 
 import styles from './ConfigHeader.less';
 
-const { TextArea } = Input
+// const { TextArea } = Input
 
 // const defaultRow = {
 //     dataIndex: '', // 字段名
@@ -108,78 +108,15 @@ export default class ConfigHeader extends PureComponent {
     }
 
     queryData = () => {
-        const { dispatch } = this.props;
+        const { customData, dispatch } = this.props
         dispatch({
-            type: 'table/fetch',
+            type: 'table/save',
             payload: {
-                fetchMethod: 'mockPromise',
-                fetchData: {
-                    list: [
-                        {
-                            dataIndex: 'col1',
-                            title: '列一',
-                            isShow: true,
-                            align: 'left',
-                            width: 'auto',
-                            sorter: false,
-                            fixed: 'false',
-                            children: [
-                                {
-                                    dataIndex: 'col1-1',
-                                    title: '列一中一',
-                                    isShow: true,
-                                    align: 'left',
-                                    width: 'auto',
-                                    sorter: false,
-                                    fixed: 'false',
-                                    children: [
-                                        {
-                                            dataIndex: 'col1-1-1',
-                                            title: '列一中一中一',
-                                            isShow: true,
-                                            align: 'left',
-                                            width: 'auto',
-                                            sorter: false,
-                                            fixed: 'false',
-                                        },
-                                    ],
-                                },
-                                {
-                                    dataIndex: 'col1-1',
-                                    title: '列一中一',
-                                    isShow: true,
-                                    align: 'left',
-                                    width: 'auto',
-                                    sorter: false,
-                                    fixed: 'false',
-                                },
-                            ],
-                        },
-                        {
-                            dataIndex: 'col2',
-                            title: '列二',
-                            isShow: true,
-                            align: 'left',
-                            width: 'auto',
-                            sorter: true,
-                            fixed: 'false',
-                            children: [],
-                        },
-                        {
-                            dataIndex: 'col3',
-                            title: '列三',
-                            isShow: false,
-                            align: 'center',
-                            width: '200',
-                            sorter: false,
-                            fixed: 'false',
-                        },
-                    ],
-                    pager: {},
-                },
+                list: customData,
             },
         })
     }
+
     addNewRecord = () => {
         const { dispatch } = this.props;
         dispatch({
@@ -298,11 +235,6 @@ export default class ConfigHeader extends PureComponent {
         return (
             <div className={styles.container}>
                 <div className={styles.buttonGroup}>
-                    <Button
-                        size="small"
-                        onClick={this.queryData}
-                    >自动生成
-                    </Button>
                     <Button
                         size="small"
                         onClick={this.addNewRecord}

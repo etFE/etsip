@@ -3,12 +3,12 @@ import { routerRedux } from 'dva/router'
 import { connect } from 'dva'
 import { Button } from 'antd'
 
-import AddForm from '../components/BasicForm'
+import BasicForm from '../components/BasicForm'
 
 import styles from './step.less'
 
-@connect(({ report }) => ({
-    report,
+@connect(({ reportNew }) => ({
+    reportNew,
 }))
 export default class Step1 extends PureComponent {
     constructor(props) {
@@ -19,12 +19,12 @@ export default class Step1 extends PureComponent {
     }
 
     componentWillMount () {
-        const { report } = this.props
-        const keys = Object.keys(report.fields)
+        const { reportNew } = this.props
+        const keys = Object.keys(reportNew.fields)
         const data = {}
 
         keys.forEach((key) => {
-            data[key] = { value: report.fields[key] }
+            data[key] = { value: reportNew.fields[key] }
         })
         this.setState({
             fields: data,
@@ -43,10 +43,9 @@ export default class Step1 extends PureComponent {
             if (!err) {
                 const { dispatch } = this.props
                 dispatch({
-                    type: 'report/saveNewReport',
+                    type: 'reportNew/fetchAddReport',
                     payload: values,
                 })
-                dispatch(routerRedux.push('step2'))
             }
         })
     }
@@ -56,17 +55,12 @@ export default class Step1 extends PureComponent {
 
         return (
             <div className={styles.container}>
-                <AddForm
+                <BasicForm
                     {...fields}
                     ref={ref => {this.form = ref}}
                     onChange={this.handleFormChange}
                 />
                 <div className={styles.buttonGroup}>
-                    <Button
-                        type="primary"
-                        onClick={this.handleGoNext}
-                    >保存并预览
-                    </Button>
                     <Button
                         type="primary"
                         onClick={this.handleGoNext}
