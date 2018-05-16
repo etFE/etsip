@@ -38,6 +38,7 @@ export default class ReportLayout extends React.PureComponent {
             dispatch(
                 routerRedux.push(path)
             )
+            dispatch({ type: 'report/fetchReport' })
         }
     }
 

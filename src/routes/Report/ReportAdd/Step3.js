@@ -11,16 +11,32 @@ import styles from './step.less'
 }))
 export default class Step3 extends PureComponent {
     componentDidMount () {
-        // const { report, dispatch } = this.props
-        // if (!report.fields.reportCode) {
-        //     dispatch(
-        //         routerRedux.push('step1')
-        //     )
-        // }
+        const { reportNew: { customHeader }, dispatch } = this.props
+
+        if (customHeader && customHeader.length === 0) {
+            dispatch(
+                routerRedux.push('step1')
+            )
+        }
     }
 
+    handlehandleGoPrev = () => {
+        const { dispatch } = this.props
+        dispatch(
+            routerRedux.push('step2')
+        )
+    }
     handleComplete = () => {
-        console.log('完成')
+        const { customData } = this.customTable.props
+        const { dispatch, reportNew } = this.props
+        dispatch({
+            type: 'reportNew/fetchAddCustomHeader',
+            payload: {
+                reportCode: reportNew.fields.reportCode,
+                modCode: reportNew.fields.modCode,
+                headJson: customData,
+            },
+        })
     }
 
     render () {
@@ -29,9 +45,15 @@ export default class Step3 extends PureComponent {
         return (
             <div className={styles.container}>
                 <ConfigHeader
+                    ref={ref => {this.customTable = ref}}
                     customData={customHeader}
                 />
                 <div className={styles.buttonGroup}>
+                    <Button
+                        size="small"
+                        onClick={this.handlehandleGoPrev}
+                    >上一步
+                    </Button>
                     <Button
                         size="small"
                         type="primary"

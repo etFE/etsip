@@ -10,49 +10,44 @@ import styles from './step.less'
 @connect(({report}) => ({
     report,
 }))
-export default class Step2 extends PureComponent {
-
-    componentDidMount () {
-        const { report, dispatch } = this.props
-        const sql = report.fields.reportBody
-
-        if (!sql) {
-            dispatch(routerRedux.push('step1'))
-        } else {
-            dispatch({
-                type: 'report/generateCustomForm',
-            })
+export default class UpdateForm extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            customForm: [],
         }
-
     }
 
-    handleChangeTable = (params) => {
-        const { dispatch } = this.props
-        dispatch({
-            type: 'report/changeCustomForm',
-            payload: params,
+    componentWillMount () {
+        const { report: { currentReport } } = this.props
+        const customForm = currentReport.formData || []
+        customForm.forEach((item, index) => {
+            item.s_key = index + 1
+            item.s_editable = true
+        })
+        this.setState({
+            customForm,
+        })
+    }
+    handleSave = () => {
+        // 表单验证
+        this.form.validateFields((err, values) => {
+            if (!err) {
+                const { dispatch } = this.props
+                dispatch({
+                    type: 'report/fetchUpdateReport',
+                    payload: values,
+                })
+            }
         })
     }
 
-    handleGoPrev = () => {
-        const { dispatch } = this.props
-        dispatch(
-            routerRedux.push('step1')
-        )
-    }
-    handleGoNext = () => {
-        const { dispatch, report } = this.props
-        dispatch({
-            type: 'report/addNewReport',
-            payload: {
-                fields: report.fields,
-                customForm: report.customForm,
-            },
-        })
+    handleChangeTable = () => {
+        console.log('change')
     }
 
     render () {
-        const { report: { customForm } } = this.props
+        const { customForm } = this.state
 
         return (
             <div className={styles.container}>
@@ -61,11 +56,10 @@ export default class Step2 extends PureComponent {
                     changeCell={this.handleChangeTable}
                 />
                 <div className={styles.buttonGroup}>
-                    <Button onClick={this.handleGoPrev} >上一步</Button>
                     <Button
                         type="primary"
-                        onClick={this.handleGoNext}
-                    >下一步
+                        onClick={this.handleSave}
+                    >保存
                     </Button>
                 </div>
             </div>

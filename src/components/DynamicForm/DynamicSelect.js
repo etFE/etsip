@@ -27,6 +27,7 @@ export default class DynamicSelect extends PureComponent {
                 defaultActiveFirstOption={false}
                 style={{width: '200px'}}
                 value={this.state.value}
+                disabled={this.props.disabled}
                 onChange={this.handleChange}
             >
                 {this.props.options.map((option) => (

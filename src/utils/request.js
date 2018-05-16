@@ -1,5 +1,5 @@
 import fetch from 'dva/fetch';
-import { notification, message } from 'antd';
+import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
 
@@ -69,16 +69,17 @@ export default function request(url, options) {
             if (newOptions.method === 'DELETE' || response.status === 204) {
                 return response.text();
             }
-            return response.json().then(res => {
-                // 算是 响应的拦截器
-                if (res.ok === false) {
-                    message.error(res.msg);
-                }
-                if (res.error) {
-                    message.error('操作失败（自定义版）');
-                }
-                return res;
-            });
+            return response.json()
+            // .then(res => {
+            //     // 算是 响应的拦截器
+            //     if (res.ok === false) {
+            //         message.error(res.msg);
+            //     }
+            //     if (res.error) {
+            //         message.error('操作失败（自定义版）');
+            //     }
+            //     return res;
+            // });
         })
         .catch(e => {
             const { dispatch } = store;

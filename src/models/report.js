@@ -12,6 +12,8 @@ export default {
         currentReport: {
             reportCode: null,
             reportName: '',
+            modCode: '',
+            reportBody: '',
             formData: [],
             columns: [],
             dataSource: [],
@@ -19,46 +21,64 @@ export default {
     },
 
     effects: {
-        // 查询报表列表 reportlayout
+        // 查询报表列表 reportlayout TODO: 分页
         *fetchReportList(_, { call, put }) {
-            const res = yield call(mockPromise, [
-                { text: '报表一报表一报表一报表一报表一', id: 'a' },
-                { text: '报表二报表二报表二', id: 'b' },
-                { text: '报表三', id: 'c' },
-                { text: '报表四', id: 'd' },
-                { text: '报表五', id: 'e' },
-            ]);
-            yield put({
-                type: 'saveReportList',
-                payload: res,
-            });
+            const res = yield call(report.query);
+            if (res && res.list) {
+                yield put({
+                    type: 'saveReportList',
+                    payload: res.list,
+                });
+            }
         },
         // 查询其中一个报表的所有数据
-        *fetchReport(_, {call, put}) {
+        *fetchReport(_, {call, put, select}) {
+            const { reportCode, modCode } = yield select(state => state.report.currentReport);
             // 自定义查询条件
-            const formData = yield call(mockPromise, [
-                { text: '人员编码', id: 'menberCode', type: 'input' },
-                { text: '所属部门', id: 'dependment', type: 'select',
-                    options: [
-                        { text: '无线端部门', id: 'fe' },
-                        { text: '后端部门', id: 'be' },
-                        { text: '设计部门', id: 'ds' },
-                    ],
-                },
-                { text: '是否', id: 'isEat', type: 'checkbox' },
-                { text: '什么时候', id: 'date', type: 'datepicker' },
-            ])
-            const columns = yield call(mockPromise, [
-                { dataIndex: 'col1', title: '第一列' },
-                { dataIndex: 'col2', title: '第二列' },
-            ])
+            const formData = yield call(report.querywherejson, {
+                data: JSON.stringify({ reportCode, modCode }),
+            })
+            const columns = yield call(report.queryheadjson, {
+                data: JSON.stringify({ reportCode, modCode }),
+            })
+            // const formData = yield call(mockPromise, [
+            //     { text: '人员编码', id: 'menberCode', type: 'input' },
+            //     { text: '所属部门', id: 'dependment', type: 'select',
+            //         options: [
+            //             { text: '无线端部门', id: 'fe' },
+            //             { text: '后端部门', id: 'be' },
+            //             { text: '设计部门', id: 'ds' },
+            //         ],
+            //     },
+            //     { text: '是否', id: 'isEat', type: 'checkbox' },
+            //     { text: '什么时候', id: 'date', type: 'datepicker' },
+            // ])
+            // const columns = yield call(mockPromise, [
+            //     { dataIndex: 'col1', title: '第一列' },
+            //     { dataIndex: 'col2', title: '第二列' },
+            // ])
             yield put({
                 type: 'saveCurrentReport',
                 payload: {
-                    formData,
-                    columns,
+                    formData: JSON.parse(formData),
+                    columns: JSON.parse(columns),
                 },
             })
+        },
+
+        *fetchDeleteReport(_, { call, put, select }) {
+            const { reportCode, modCode } = yield select(state => state.report.currentReport);
+
+            yield call(report.delete, {
+                data: { reportCode },
+            })
+        },
+
+        *fetchUpdateReport({ payload }, { call }) {
+            const res = yield call(report.update, { data: payload })
+            if (res && res.ok) {
+                message.success('修改成功！')
+            }
         },
     },
 
@@ -73,15 +93,15 @@ export default {
 
         // 切换报表列表 reportlauout > reportlist
         changeCurrentReport (state, action) {
-            const currentReport = state.reportList.filter((item) => item.id === action.payload)[0]
+            const currentReport = state.reportList.filter((item) => item.reportCode === action.payload)[0]
             return {
                 ...state,
                 currentReport: {
                     ...state.currentReport,
-                    reportCode: action.payload,
-                    reportName: currentReport ? currentReport.text : '',
+                    ...currentReport,
                 },
             }
+
         },
         // 存储当前报表的 动态表单 动态表头
         saveCurrentReport (state, action) {

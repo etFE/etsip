@@ -160,6 +160,7 @@ export function isUrl(path) {
     return reg.test(path);
 }
 
+// 模拟请求
 export const mockPromise = (data) => (
     new Promise((resolve) => {
         setTimeout(() => {
@@ -167,3 +168,19 @@ export const mockPromise = (data) => (
         }, 500);
     })
 )
+
+// 转换对象为query
+export const convertQuery = (data) => {
+    if (typeof data === 'object') {
+        const keys = Object.keys(data)
+        const queryArray = []
+
+        keys.forEach((key) => {
+            const str = `${key}=${data[key]}`
+            queryArray.push(str)
+        })
+
+        return queryArray.join('&')
+    }
+    console.error('param must is object')
+}

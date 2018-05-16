@@ -6,10 +6,10 @@ const FormItem = Form.Item
 const { TextArea } = Input
 
 const modOptions = [
-    { id: '01', text: '物流系统' },
+    { id: '01', text: '预算系统' },
     { id: '02', text: '财务系统' },
     { id: '03', text: '人资系统' },
-    { id: '04', text: '预算系统' },
+    { id: '04', text: '物流系统' },
 ]
 
 const CustomizedForm = (props) => {
@@ -17,15 +17,15 @@ const CustomizedForm = (props) => {
     return (
         <Form onSubmit={props.onSubmit} layout="inline">
             <FormItem label="系统">
-                {getFieldDecorator('mod_code', {
+                {getFieldDecorator('modCode', {
                     rules: [{ required: true, message: '系统必选！' }],
-                })(<DynamicSelect options={modOptions} />)}
+                })(<DynamicSelect disabled={props.modCode.disabled} options={modOptions} />)}
             </FormItem>
 
             <FormItem label="报表编号">
                 {getFieldDecorator('reportCode', {
                     rules: [{ required: true, message: '报表编号必填！' }],
-                })(<Input size="small"  style={{width: '200px'}} />)}
+                })(<Input size="small" disabled={props.reportCode.disabled} style={{width: '200px'}} />)}
             </FormItem>
 
             <FormItem label="报表名称">
@@ -50,13 +50,15 @@ const BasicForm = Form.create({
     },
     mapPropsToFields(props) {
         return {
-            mod_code: Form.createFormField({
-                ...props.mod_code,
-                value: props.mod_code.value,
+            modCode: Form.createFormField({
+                ...props.modCode,
+                value: props.modCode.value,
+                disabled: props.modCode.disabled || false,
             }),
             reportCode: Form.createFormField({
                 ...props.reportCode,
                 value: props.reportCode.value,
+                disabled: props.reportCode.disabled || false,
             }),
             reportName: Form.createFormField({
                 ...props.reportName,

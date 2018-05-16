@@ -10,7 +10,7 @@ import styles from './step.less'
 @connect(({ report }) => ({
     report,
 }))
-export default class Step1 extends PureComponent {
+export default class UpdateBasic extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,34 +19,26 @@ export default class Step1 extends PureComponent {
     }
 
     componentWillMount () {
-        const { report } = this.props
-        const keys = Object.keys(report.fields)
-        const data = {}
-
-        keys.forEach((key) => {
-            data[key] = { value: report.fields[key] }
-        })
+        const { report: { currentReport } } = this.props
+        const fields = {
+            reportCode: { value: currentReport.reportCode, disabled: true },
+            reportName: { value: currentReport.reportName },
+            modCode: { value: currentReport.modCode, disabled: true },
+            reportBody: { value: currentReport.reportBody },
+        }
         this.setState({
-            fields: data,
+            fields,
         })
     }
-
-    handleFormChange = (changedFields) => {
-        this.setState(({ fields }) => ({
-            fields: { ...fields, ...changedFields },
-        }))
-    }
-
-    handleGoNext = () => {
+    handleSave = () => {
         // 表单验证
         this.form.validateFields((err, values) => {
             if (!err) {
                 const { dispatch } = this.props
                 dispatch({
-                    type: 'report/saveNewReport',
+                    type: 'report/fetchUpdateReport',
                     payload: values,
                 })
-                dispatch(routerRedux.push('step2'))
             }
         })
     }
@@ -59,18 +51,13 @@ export default class Step1 extends PureComponent {
                 <BasicForm
                     {...fields}
                     ref={ref => {this.form = ref}}
-                    onChange={this.handleFormChange}
+                    onChange={() => {}}
                 />
                 <div className={styles.buttonGroup}>
                     <Button
                         type="primary"
-                        onClick={this.handleGoNext}
-                    >保存并预览
-                    </Button>
-                    <Button
-                        type="primary"
-                        onClick={this.handleGoNext}
-                    >保存并下一步
+                        onClick={this.handleSave}
+                    >保存
                     </Button>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'dva'
-import { Button } from 'antd'
+import { Button, Modal } from 'antd'
 
 import QueryTable from '../../components/Table/QueryTable'
 import DynamicForm from './components/DynamicForm'
@@ -8,11 +8,9 @@ import ReportUpdate from './ReportUpdate'
 
 import styles from './ReportContent.less'
 
-@connect(({report, table, loading}) => ({
+@connect(({report, loading}) => ({
     report,
-    table,
-    loading: loading.models.table,
-    reportLoading: loading.models.report,
+    loading: loading.models.report,
 }))
 export default class ReportContent extends PureComponent {
     constructor(props) {
@@ -21,6 +19,8 @@ export default class ReportContent extends PureComponent {
         this.state = {
             modalType: '',
             modalVisible: false,
+
+            dataSource: [],
         }
     }
 
@@ -29,23 +29,12 @@ export default class ReportContent extends PureComponent {
         const { location, dispatch } = this.props
         const { pathname } = location
         const pathArr = pathname.split('/')
-        // 初始根据路由 设置列表的active
+        // 初始根据路由 设置列表的active TODO: 异步
         dispatch({
             type: 'report/changeCurrentReport',
             payload: pathArr[pathArr.length - 1],
         })
         this.queryData()
-    }
-    componentWillUpdate (nextProps) {
-        if (this.props.location.pathname !== nextProps.location.pathname) {
-            const { dispatch } = this.props
-            // 查询 动态表单 动态表头
-            dispatch({
-                type: 'report/fetchReport',
-            })
-
-            this.queryData()
-        }
     }
 
     handleUpdate = (target) => {
@@ -60,6 +49,18 @@ export default class ReportContent extends PureComponent {
             modalVisible: false,
         })
     }
+    // 删除报表
+    handleDelete = () => {
+        Modal.confirm({
+            title: '警告！',
+            content: '此操作将会永久删除该报表！',
+            onOk: () => {
+                this.props.dispatch({
+                    type: 'report/fetchDeleteReport',
+                })
+            },
+        })
+    }
 
     queryData = () => {
         // 获取表单数据并 过滤没有值的
@@ -70,25 +71,16 @@ export default class ReportContent extends PureComponent {
                 delete formData[key]
             }
         })
-        const { dispatch } = this.props
-
+        // const { dispatch } = this.props
         // 查询 表格数据
-        dispatch({
-            type: 'table/fetch',
-            payload: {
-                fetchMethod: 'mockPromise',
-                fetchData: {
-                    list: [
-                        { col1: 'aaa', col2: 'bbb' },
-                        { col1: 'ccc', col2: 'ddd' },
-                    ],
-                },
-            },
-        })
+        // dispatch({
+        //     type: 'table/fetch',
+        //     payload: {},
+        // })
     }
 
     render () {
-        const { report: { currentReport }, table: { dataSource }, loading, reportLoading } = this.props
+        const { report: { currentReport }, loading } = this.props
         return (
             <div className="container">
                 <div className={styles.header}>
@@ -109,6 +101,12 @@ export default class ReportContent extends PureComponent {
                             onClick={() => this.handleUpdate('updateHeader')}
                         >配置表格列头
                         </Button>
+                        <Button
+                            size="small"
+                            type="danger"
+                            onClick={this.handleDelete}
+                        >删除报表
+                        </Button>
                     </div>
                 </div>
                 <DynamicForm
@@ -116,9 +114,8 @@ export default class ReportContent extends PureComponent {
                     formData={currentReport.formData}
                 />
                 <QueryTable
-                    loading={reportLoading ? false : loading}
                     columns={currentReport.columns}
-                    dataSource={dataSource}
+                    dataSource={this.state.dataSource}
                     queryData={this.queryData}
                 />
                 <ReportUpdate

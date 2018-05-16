@@ -1,20 +1,18 @@
 import { message } from 'antd'
 import { routerRedux } from 'dva/router'
 
+
 import { report } from '../services/api';
-import { mockPromise } from '../utils/utils.js'
 
 export default {
     namespace: 'reportNew',
     state: {
         // step1
         fields: {
-            mod_code: '01',
+            modCode: '04',
             reportCode: '01',
-            reportName: 'reportTest',
-            reportBody: `select name,code,date as month, c1.desc from (
-                select * from chartA c1 where c1.id=1 and c1.name=@name
-            ) c2 where c2.code=@code and c2.name=@name and c2.date=@date`,
+            reportName: 'report 01',
+            reportBody: `select name,code,date as month, c1.desc from chart c2 where c2.code=@code and c2.name=@name and c2.date=@date`,
         },
         // step2
         customForm: [],
@@ -24,7 +22,7 @@ export default {
 
     effects: {
         // 保存 step1
-        *fetchAddReport({ payload }, {call, put}) {
+        *fetchAddReport({ payload }, {call, put, select}) {
             // 检查 sql
             const { reportBody } = payload
             const headerFields = reportBody.match(/select\s.*\sfrom/)[0]
@@ -34,9 +32,15 @@ export default {
                 message.error('请明确写出查询字段，而不是 *', 5)
                 return;
             }
-            // fetch
-            // const res = yield call(report.add, payload)
-            const res = yield call(mockPromise, { ok: true })
+
+            // 判断是否是新增，add 否则 update
+            const reportList = yield select(state => state.report.reportList)
+            let res
+            if (reportList.some(item => item.reportCode === payload.reportCode)) {
+                res = yield call(report.update, { data: payload })
+            } else {
+                res = yield call(report.add, { data: payload })
+            }
 
             if (res && res.ok) {
                 yield put({
@@ -52,12 +56,35 @@ export default {
                 )
             }
         },
-        *fetchAddCustomForm({ payload }, { call, put }) {
-            // const res = yield call(report.addOrEditWhere, payload)
-            const res = yield call(mockPromise, { ok: true })
+        *fetchAddCustomForm(_, { call, put, select }) {
+            const { fields, customForm } = yield select(state => state.reportNew)
+            // TODO: 这里还要处理下拉框的 option数据
+            const formData = [...customForm]
+            formData.forEach((item) => {
+                if (item.type === 'select') {
+                    item.options = []
+                }
+            })
+
+            const res = yield call(report.addoreditwhere, {
+                params: {
+                    reportCode: fields.reportCode,
+                    modCode: fields.modCode,
+                    whereJson: JSON.stringify(formData),
+                },
+            })
 
             if (res && res.ok) {
                 yield put(routerRedux.push('step3'))
+            }
+        },
+
+        *fetchAddCustomHeader({ payload }, { call, put }) {
+            const res = yield call(report.addoredithead, { params: payload })
+
+            if (res && res.ok) {
+                message.success('保存成功')
+                yield put(routerRedux.push(`/report/${payload.reportCode}`))
             }
         },
     },
@@ -123,6 +150,7 @@ export default {
                     width: 'auto',
                     sorter: false,
                     fixed: 'false',
+                    s_editable: true,
                 }
             })
             return {
@@ -136,10 +164,10 @@ export default {
             return {
                 ...state,
                 fields: {
-                    mod_code: '',
-                    reportCode: '',
-                    reportName: '',
-                    reportBody: '',
+                    modCode: '04',
+                    reportCode: '06',
+                    reportName: 'report 06',
+                    reportBody: `select name,code,date as month, c1.desc from chart c2 where c2.code=@code and c2.name=@name and c2.date=@date`,
                 },
                 customForm: [],
                 customHeader: [],

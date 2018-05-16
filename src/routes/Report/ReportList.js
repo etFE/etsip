@@ -26,10 +26,10 @@ export default class ReportList extends PureComponent {
                 >
                     {reports.map((item) => (
                         <Menu.Item
-                            key={item.id}
+                            key={item.reportCode}
                         >
-                            <span title={item.text}>
-                                <Icon type="layout" />{item.text}
+                            <span title={item.reportName}>
+                                <Icon type="layout" />{item.reportName}
                             </span>
                         </Menu.Item>
                     ))}

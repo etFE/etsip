@@ -9,30 +9,36 @@ import styles from './step.less'
 @connect(({report}) => ({
     report,
 }))
-export default class Step3 extends PureComponent {
-    componentDidMount () {
-        // const { report, dispatch } = this.props
-        // if (!report.fields.reportCode) {
-        //     dispatch(
-        //         routerRedux.push('step1')
-        //     )
-        // }
+export default class UpdateHeader extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            customHeader: [],
+        }
     }
 
-    handleComplete = () => {
-        console.log('完成')
+    componentWillMount () {
+        const { report: { currentReport } } = this.props
+        this.setState({
+            customHeader: currentReport.columns || [],
+        })
+    }
+
+    handleSave = () => {
+        console.log('保存')
     }
 
     render () {
         return (
             <div className={styles.container}>
-                <ConfigHeader />
+                <ConfigHeader
+                    customData={this.state.customHeader}
+                />
                 <div className={styles.buttonGroup}>
                     <Button
-                        size="small"
                         type="primary"
-                        onClick={this.handleComplete}
-                    >完成
+                        onClick={this.handleSave}
+                    >保存
                     </Button>
                 </div>
             </div>

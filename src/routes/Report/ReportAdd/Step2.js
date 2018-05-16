@@ -36,15 +36,8 @@ export default class Step2 extends PureComponent {
     }
 
     handleGoNext = () => {
-        const { dispatch, reportNew } = this.props
-        dispatch({
-            type: 'reportNew/fetchAddCustomForm',
-            payload: {
-                reportCode: reportNew.fields.reportCode,
-                modCode: reportNew.fields.mod_code,
-                whereJson: reportNew.customForm,
-            },
-        })
+        const { dispatch } = this.props
+        dispatch({ type: 'reportNew/fetchAddCustomForm' })
     }
 
     render () {

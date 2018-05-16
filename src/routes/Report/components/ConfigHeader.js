@@ -109,12 +109,15 @@ export default class ConfigHeader extends PureComponent {
 
     queryData = () => {
         const { customData, dispatch } = this.props
-        dispatch({
-            type: 'table/save',
-            payload: {
-                list: customData,
-            },
-        })
+        dispatch({ type: 'table/clear' })
+        setTimeout(() => {
+            dispatch({
+                type: 'table/save',
+                payload: {
+                    list: customData,
+                },
+            })
+        }, 300);
     }
 
     addNewRecord = () => {
@@ -230,8 +233,6 @@ export default class ConfigHeader extends PureComponent {
         // )
 
         // const dataJsonHtml = this.jsonToHtml(dataSource)
-
-
         return (
             <div className={styles.container}>
                 <div className={styles.buttonGroup}>
