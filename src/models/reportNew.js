@@ -1,18 +1,19 @@
 import { message } from 'antd'
 import { routerRedux } from 'dva/router'
 
-
-import { report } from '../services/api';
+import { report } from '../services/api'
+import { resolveSqlToForm, resolveSqlToHeader } from '../utils/utils'
 
 export default {
     namespace: 'reportNew',
     state: {
         // step1
+        isAdd: true,
         fields: {
-            modCode: '04',
-            reportCode: '01',
-            reportName: 'report 01',
-            reportBody: `select name,code,date as month, c1.desc from chart c2 where c2.code=@code and c2.name=@name and c2.date=@date`,
+            modCode: '',
+            reportCode: '',
+            reportName: '',
+            reportBody: '',
         },
         // step2
         customForm: [],
@@ -34,53 +35,74 @@ export default {
             }
 
             // 判断是否是新增，add 否则 update
-            const reportList = yield select(state => state.report.reportList)
+            const isAdd = yield select(state => state.reportNew.isAdd)
             let res
-            if (reportList.some(item => item.reportCode === payload.reportCode)) {
-                res = yield call(report.update, { data: payload })
-            } else {
+            if (isAdd) {
                 res = yield call(report.add, { data: payload })
+            } else {
+                res = yield call(report.update, { data: payload })
             }
 
             if (res && res.ok) {
                 yield put({
+                    type: 'saveNewReport',
+                    payload,
+                })
+                yield put({
                     type: 'saveCustomForm',
-                    payload: reportBody,
+                    payload: resolveSqlToForm(reportBody),
                 })
                 yield put({
                     type: 'saveCustomHeader',
-                    payload: headerField,
+                    payload: resolveSqlToHeader(reportBody),
                 })
                 yield put(
                     routerRedux.push('step2')
                 )
+                // 将状态改变
+                yield put({
+                    type: 'changeAddStatus',
+                    payload: false,
+                })
             }
         },
-        *fetchAddCustomForm(_, { call, put, select }) {
-            const { fields, customForm } = yield select(state => state.reportNew)
+        *fetchAddCustomForm({ payload }, { call, put, select }) {
+            const { fields } = yield select(state => state.reportNew)
             // TODO: 这里还要处理下拉框的 option数据
-            const formData = [...customForm]
-            formData.forEach((item) => {
+            const customForm = [...payload]
+            customForm.forEach((item) => {
                 if (item.type === 'select') {
                     item.options = []
                 }
             })
 
             const res = yield call(report.addoreditwhere, {
-                params: {
+                data: {
                     reportCode: fields.reportCode,
                     modCode: fields.modCode,
-                    whereJson: JSON.stringify(formData),
+                    whereJson: JSON.stringify(customForm),
                 },
             })
 
             if (res && res.ok) {
                 yield put(routerRedux.push('step3'))
+                yield put({
+                    type: 'saveCustomForm',
+                    payload: customForm,
+                })
             }
         },
 
-        *fetchAddCustomHeader({ payload }, { call, put }) {
-            const res = yield call(report.addoredithead, { params: payload })
+        *fetchAddCustomHeader({ payload }, { call, put, select }) {
+            const { fields } = yield select(state => state.reportNew)
+
+            const res = yield call(report.addoredithead, {
+                data: {
+                    reportCode: fields.reportCode,
+                    modCode: fields.modCode,
+                    headJson: JSON.stringify(payload),
+                },
+            })
 
             if (res && res.ok) {
                 message.success('保存成功')
@@ -99,20 +121,9 @@ export default {
         },
         // 解析 生成默认表单数据 step2
         saveCustomForm (state, action) {
-            const reportBody = action.payload
-            const paramArray = reportBody.match(/@[a-zA-Z_]+/g)
-            const customForm = []
-            if (paramArray) {
-                paramArray.forEach((item, index) => {
-                    const id = item.split('@')[1]
-                    customForm.push(
-                        { id, text: id, type: 'input', s_editable: true, s_key: index + 1 }
-                    )
-                })
-            }
             return {
                 ...state,
-                customForm,
+                customForm: action.payload,
             }
         },
         // 改变表单数据 step2
@@ -131,48 +142,31 @@ export default {
         },
         // 解析 生成默认表格数据 step3
         saveCustomHeader (state, action) {
-            let headerFields = action.payload
-            headerFields = headerFields.split(',')
-
-            const columns = headerFields.map((field) => {
-                let text = field
-                if (text.indexOf('as') !== -1) {
-                    ;[,text] = text.split(' as ')
-                }
-                if (text.indexOf('.') !== -1) {
-                    ;[,text] = text.split(' ')
-                }
-                return {
-                    dataIndex: text,
-                    title: text,
-                    isShow: true,
-                    align: 'left',
-                    width: 'auto',
-                    sorter: false,
-                    fixed: 'false',
-                    s_editable: true,
-                }
-            })
             return {
                 ...state,
-                customHeader: columns,
+                customHeader: action.payload,
             }
         },
-
         // 重置 所有
         clearStore (state) {
             return {
                 ...state,
+                isAdd: true,
                 fields: {
-                    modCode: '04',
-                    reportCode: '06',
-                    reportName: 'report 06',
-                    reportBody: `select name,code,date as month, c1.desc from chart c2 where c2.code=@code and c2.name=@name and c2.date=@date`,
+                    modCode: '',
+                    reportCode: '',
+                    reportName: '',
+                    reportBody: '',
                 },
                 customForm: [],
                 customHeader: [],
             }
         },
-
+        changeAddStatus (state, action) {
+            return {
+                ...state,
+                isAdd: action.payload,
+            }
+        },
     },
 };

@@ -169,18 +169,43 @@ export const mockPromise = (data) => (
     })
 )
 
-// 转换对象为query
-export const convertQuery = (data) => {
-    if (typeof data === 'object') {
-        const keys = Object.keys(data)
-        const queryArray = []
-
-        keys.forEach((key) => {
-            const str = `${key}=${data[key]}`
-            queryArray.push(str)
+// 解析sql，自动生成查询条件数据
+export const resolveSqlToForm = (sql) => {
+    const arr = sql.match(/@[a-zA-Z_]+/g)
+    const data = []
+    if (arr) {
+        arr.forEach((item) => {
+            const id = item.split('@')[1]
+            data.push(
+                { id, text: id, type: 'input' }
+            )
         })
-
-        return queryArray.join('&')
     }
-    console.error('param must is object')
+    return data
+}
+// 解析sql，自动生成自定义表头
+export const resolveSqlToHeader = (sql) => {
+    const select = sql.match(/select\s.*\sfrom/)[0] // 截取 select ... from
+    ;const [,conditions] = select.split(' ') // 截取条件
+    const conditionArr = conditions.split(',') // 条件分组
+    const data = conditionArr.map((field) => {
+        let text = field
+        if (text.indexOf('as') !== -1) {
+            ;[,text] = text.split(' as ')
+        }
+        if (text.indexOf('.') !== -1) {
+            ;[,text] = text.split(' ')
+        }
+        return {
+            dataIndex: text,
+            title: text,
+            isShow: true,
+            align: 'left',
+            width: 'auto',
+            sorter: false,
+            fixed: 'false',
+            s_editable: true,
+        }
+    })
+    return data
 }

@@ -20,13 +20,13 @@ export default class Step2 extends PureComponent {
         }
     }
 
-    handleChangeTable = (params) => {
-        const { dispatch } = this.props
-        dispatch({
-            type: 'reportNew/changeCustomForm',
-            payload: params,
-        })
-    }
+    // handleChangeTable = (params) => {
+    //     const { dispatch } = this.props
+    //     dispatch({
+    //         type: 'reportNew/changeCustomForm',
+    //         payload: params,
+    //     })
+    // }
 
     handleGoPrev = () => {
         const { dispatch } = this.props
@@ -37,7 +37,11 @@ export default class Step2 extends PureComponent {
 
     handleGoNext = () => {
         const { dispatch } = this.props
-        dispatch({ type: 'reportNew/fetchAddCustomForm' })
+
+        dispatch({
+            type: 'reportNew/fetchAddCustomForm',
+            payload: this.configForm.props.dataSource,
+        })
     }
 
     render () {
@@ -46,8 +50,9 @@ export default class Step2 extends PureComponent {
         return (
             <div className={styles.container}>
                 <ConfigForm
+                    ref={ref => {this.configForm = ref}}
                     dataSource={customForm}
-                    changeCell={this.handleChangeTable}
+                    // changeCell={this.handleChangeTable}
                 />
                 <div className={styles.buttonGroup}>
                     <Button onClick={this.handleGoPrev} >上一步</Button>

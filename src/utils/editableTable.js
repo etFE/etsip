@@ -1,11 +1,12 @@
 // 遍历数据及子数据，增加s_key字段
-export const loopAndSetKey = (data, prekey) => {
+export const loopAndSetKey = (data, prekey, callback) => {
     const dataSource = data.map((record, index) => {
         record.s_key = prekey ? `${prekey}-${index + 1}` : `${index + 1}`
+        callback(record)
 
         if (record.children) {
             // if (record.children.length > 0) {
-            record.children = loopAndSetKey(record.children, record.s_key)
+            record.children = loopAndSetKey(record.children, record.s_key, callback)
             // } else {
             //     delete record.children
             // }

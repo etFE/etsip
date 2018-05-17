@@ -27,15 +27,11 @@ export default class Step3 extends PureComponent {
         )
     }
     handleComplete = () => {
-        const { customData } = this.customTable.props
-        const { dispatch, reportNew } = this.props
+        const { dataSource } = this.customTable.props
+        const { dispatch } = this.props
         dispatch({
             type: 'reportNew/fetchAddCustomHeader',
-            payload: {
-                reportCode: reportNew.fields.reportCode,
-                modCode: reportNew.fields.modCode,
-                headJson: customData,
-            },
+            payload: dataSource,
         })
     }
 
@@ -46,7 +42,7 @@ export default class Step3 extends PureComponent {
             <div className={styles.container}>
                 <ConfigHeader
                     ref={ref => {this.customTable = ref}}
-                    customData={customHeader}
+                    dataSource={customHeader}
                 />
                 <div className={styles.buttonGroup}>
                     <Button

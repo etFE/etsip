@@ -1,6 +1,5 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal } from 'antd'
 
 import CustomTable from 'components/Table/CustomTable'
 
@@ -26,7 +25,7 @@ export default class ConfigForm extends PureComponent {
                         options: [
                             { value: 'input', text: '文本框' },
                             { value: 'select', text: '下拉框' },
-                            { value: 'date', text: '日期框' },
+                            { value: 'datepicker', text: '日期框' },
                             { value: 'checkbox', text: '复选框' },
                         ],
                     },
@@ -37,24 +36,47 @@ export default class ConfigForm extends PureComponent {
                 //     editor: { type: 'text' },
                 // },
             ],
+            dataSource: [],
         }
+    }
+
+    componentWillMount () {
+        const { dataSource } = this.props
+        dataSource.forEach((data, index) => {
+            data.s_editable = true
+            data.s_key = index + 1
+        })
+        this.setState({
+            dataSource,
+        })
+    }
+
+    changeCell = ({ key, dataIndex, value }) => {
+        const { dataSource } = this.state
+
+        dataSource.forEach((data) => {
+            if (data.s_key === key) {
+                data[dataIndex] = value
+            }
+        })
+
+        this.setState({
+            dataSource,
+        })
     }
 
     render () {
         return (
-            <Fragment>
-                <CustomTable
-                    editable
-                    changeCell={this.props.changeCell}
-                    dataSource={this.props.dataSource}
-                    columns={this.state.columns}
-                />
-            </Fragment>
+            <CustomTable
+                editable
+                changeCell={this.changeCell}
+                dataSource={this.state.dataSource}
+                columns={this.state.columns}
+            />
         )
     }
 }
 
 ConfigForm.propTypes = {
     dataSource: PropTypes.array.isRequired,
-    changeCell: PropTypes.func.isRequired,
 }

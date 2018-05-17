@@ -1,8 +1,7 @@
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 import { routerRedux } from 'dva/router'
 
 import { report } from '../services/api';
-import { mockPromise } from '../utils/utils.js'
 
 export default {
     namespace: 'report',
@@ -41,6 +40,14 @@ export default {
             const columns = yield call(report.queryheadjson, {
                 data: JSON.stringify({ reportCode, modCode }),
             })
+
+            yield put({
+                type: 'saveCurrentReport',
+                payload: {
+                    formData: formData ? JSON.parse(formData) : [],
+                    columns: columns ? JSON.parse(columns) : [],
+                },
+            })
             // const formData = yield call(mockPromise, [
             //     { text: '人员编码', id: 'menberCode', type: 'input' },
             //     { text: '所属部门', id: 'dependment', type: 'select',
@@ -57,21 +64,24 @@ export default {
             //     { dataIndex: 'col1', title: '第一列' },
             //     { dataIndex: 'col2', title: '第二列' },
             // ])
-            yield put({
-                type: 'saveCurrentReport',
-                payload: {
-                    formData: JSON.parse(formData),
-                    columns: JSON.parse(columns),
-                },
-            })
+
         },
 
         *fetchDeleteReport(_, { call, put, select }) {
-            const { reportCode, modCode } = yield select(state => state.report.currentReport);
+            const { reportList, currentReport: { reportCode, modCode } } = yield select(state => state.report);
 
-            yield call(report.delete, {
-                data: { reportCode },
+            const res = yield call(report.delete, {
+                data: { reportCode, modCode },
             })
+            if (res && res.ok) {
+                let data = [...reportList]
+                data = data.filter(item => !(item.reportCode === reportCode && item.modCode === modCode))
+                yield put({
+                    type: 'saveReportList',
+                    payload: data,
+                })
+                yield put(routerRedux.push('/report/add'))
+            }
         },
 
         *fetchUpdateReport({ payload }, { call }) {
@@ -94,14 +104,28 @@ export default {
         // 切换报表列表 reportlauout > reportlist
         changeCurrentReport (state, action) {
             const currentReport = state.reportList.filter((item) => item.reportCode === action.payload)[0]
+
+            if (currentReport) {
+                return {
+                    ...state,
+                    currentReport: {
+                        ...state.currentReport,
+                        ...currentReport,
+                    },
+                }
+            }
             return {
                 ...state,
                 currentReport: {
-                    ...state.currentReport,
-                    ...currentReport,
+                    reportCode: null,
+                    reportName: '',
+                    modCode: '',
+                    reportBody: '',
+                    formData: [],
+                    columns: [],
+                    dataSource: [],
                 },
             }
-
         },
         // 存储当前报表的 动态表单 动态表头
         saveCurrentReport (state, action) {

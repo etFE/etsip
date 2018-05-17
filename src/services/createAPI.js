@@ -36,11 +36,7 @@ instance.interceptors.response.use((res) => {
     }
     return res.data
 }, (error) => {
-    notification.error({
-        message: error.response.status,
-        description: error.response.statusText,
-    })
-    console.log(store);
+    message.error(`${error.response.status} ${error.response.statusText}`)
     Promise.reject(error)
 })
 
