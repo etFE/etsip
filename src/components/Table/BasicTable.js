@@ -6,7 +6,7 @@ import './BasicTable.less'
 
 export default class BasicTable extends PureComponent {
     render () {
-        const { loading, dataSource, pagination, columns } = this.props
+        const { loading, dataSource, pagination, columns, onRow } = this.props
         return (
             <Table
                 bordered
@@ -17,6 +17,7 @@ export default class BasicTable extends PureComponent {
                 pagination={pagination}
                 size="middle"
                 scroll={{ x: true }}
+                onRow={onRow}
             />
         )
     }

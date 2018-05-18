@@ -1,8 +1,7 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Table } from 'antd'
 // import styles from './CustomTable.less'
-
+import BasicTable from './BasicTable'
 import EditableTableCell from './EditableTableCell'
 
 const {
@@ -15,7 +14,7 @@ const {
 /**
  * 自定义表格 通过 editable控制是否可编辑，没有操作按钮列，别的东西都需要自己在外面配置
  */
-export default class EditableTable extends PureComponent {
+export default class EditableTable extends Component {
     // 单元格数据更改
     onCellChange = (key, dataIndex) => {
         return (value) => {
@@ -101,16 +100,11 @@ export default class EditableTable extends PureComponent {
     render () {
         const { editable, loading, dataSource } = this.props
         const columns = this.initColumns()
-
         return (
-            <Table
-                bordered
-                rowKey='s_key'
+            <BasicTable
                 loading={loading}
                 dataSource={dataSource}
                 columns={columns}
-                size="middle"
-                scroll={{ x: true }}
                 onRow={(record) => {
                     if (editable) {
                         return {

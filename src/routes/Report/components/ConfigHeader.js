@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Button } from 'antd';
 import CustomTable from 'components/Table/CustomTable';
@@ -22,7 +22,7 @@ const defaultRow = {
     table,
     loading: loading.models.table,
 }))
-export default class ConfigHeader extends PureComponent {
+export default class ConfigHeader extends Component {
     constructor (props) {
         super(props)
 
@@ -88,6 +88,7 @@ export default class ConfigHeader extends PureComponent {
                     title: '操作',
                     dataIndex: 'decoration',
                     fixed: 'right',
+                    width: 120,
                     render: (text, record) => (
                         <Fragment>
                             <span
@@ -192,7 +193,6 @@ export default class ConfigHeader extends PureComponent {
         //         </Button>
         //     </Fragment>
         // )
-
         // const dataJsonHtml = this.jsonToHtml(dataSource)
         return (
             <div className={styles.container}>

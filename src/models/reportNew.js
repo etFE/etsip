@@ -3,6 +3,7 @@ import { routerRedux } from 'dva/router'
 
 import { report } from '../services/api'
 import { resolveSqlToForm, resolveSqlToHeader } from '../utils/utils'
+import store from '../index'
 
 export default {
     namespace: 'reportNew',
@@ -26,8 +27,14 @@ export default {
         *fetchAddReport({ payload }, {call, put, select}) {
             // 检查 sql
             const { reportBody } = payload
-            const headerFields = reportBody.match(/select\s.*\sfrom/)[0]
-            ;const [,headerField] = headerFields.split(' ')
+            const headerFields = reportBody.match(/select\s.*\sfrom/)
+
+            if (!headerFields) {
+                message.error('请输入正确的SQL语句', 5)
+                return;
+            }
+
+            ;const [,headerField] = headerFields[0].split(' ')
             // 检查 *
             if (headerField === '*') {
                 message.error('请明确写出查询字段，而不是 *', 5)
@@ -64,6 +71,13 @@ export default {
                     type: 'changeAddStatus',
                     payload: false,
                 })
+
+                const reportList = yield select(state => state.report.reportList)
+                reportList.push(payload)
+                store.dispatch({
+                    type: 'report/saveReportList',
+                    payload: reportList,
+                })
             }
         },
         *fetchAddCustomForm({ payload }, { call, put, select }) {
@@ -92,7 +106,6 @@ export default {
                 })
             }
         },
-
         *fetchAddCustomHeader({ payload }, { call, put, select }) {
             const { fields } = yield select(state => state.reportNew)
 
@@ -106,7 +119,12 @@ export default {
 
             if (res && res.ok) {
                 message.success('保存成功')
-                yield put(routerRedux.push(`/report/${payload.reportCode}`))
+                store.dispatch({
+                    type: 'report/changeCurrentReport',
+                    payload: fields.reportCode,
+                })
+                store.dispatch({ type: 'report/fetchReport' })
+                yield put(routerRedux.push(`/report/${fields.reportCode}`))
             }
         },
     },

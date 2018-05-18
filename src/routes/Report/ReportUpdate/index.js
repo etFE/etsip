@@ -1,11 +1,11 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Modal } from 'antd'
 
 import UpdateBasic from './UpdateBasic'
 import UpdateForm from './UpdateForm'
 import UpdateHeader from './UpdateHeader'
 
-export default class ReportAdd extends PureComponent {
+export default class ReportAdd extends Component {
     constructor(props) {
         super(props);
 

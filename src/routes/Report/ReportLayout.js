@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'dva';
 import { Card, Spin } from 'antd';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
@@ -13,7 +13,7 @@ import styles from './ReportLayout.less'
     reportNew,
     loading: loading.models.reportNew || loading.models.report,
 }))
-export default class ReportLayout extends React.PureComponent {
+export default class ReportLayout extends PureComponent {
     componentDidMount () {
         this.queryReports()
     }

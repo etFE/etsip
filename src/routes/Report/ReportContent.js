@@ -1,5 +1,6 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Component } from 'react'
 import { connect } from 'dva'
+import { routerRedux } from 'dva/router'
 import { Button, Modal } from 'antd'
 
 import QueryTable from '../../components/Table/QueryTable'
@@ -12,42 +13,27 @@ import styles from './ReportContent.less'
     report,
     loading: loading.models.report,
 }))
-export default class ReportContent extends PureComponent {
-    constructor(props) {
-        super(props);
+export default class ReportContent extends Component {
+    componentDidMount () {
+        const { report: { currentReport }, dispatch } = this.props
 
-        this.state = {
-            modalType: '',
-            modalVisible: false,
-
-            dataSource: [],
+        if (!currentReport.reportCode) {
+            dispatch(
+                routerRedux.push('/report/add')
+            )
         }
     }
 
-
-    componentDidMount () {
-        const { location, dispatch } = this.props
-        const { pathname } = location
-        const pathArr = pathname.split('/')
-        // 初始根据路由 设置列表的active TODO: 异步
+    handleOpenUpdate = (target) => {
+        const { dispatch } = this.props
         dispatch({
-            type: 'report/changeCurrentReport',
-            payload: pathArr[pathArr.length - 1],
-        })
-        this.queryData()
-    }
-
-    handleUpdate = (target) => {
-        this.setState({
-            modalType: target,
-            modalVisible: true,
+            type: 'report/openUpdateModal',
+            payload: target,
         })
     }
     handleCloseModal = () => {
-        this.setState({
-            modalType: '',
-            modalVisible: false,
-        })
+        const { dispatch } = this.props
+        dispatch({ type: 'report/closeUpdateModal' })
     }
     // 删除报表
     handleDelete = () => {
@@ -68,19 +54,23 @@ export default class ReportContent extends PureComponent {
         const keys = Object.keys(formData)
         keys.forEach((key) => {
             if (formData[key] === undefined || formData[key] === null) {
-                delete formData[key]
+                formData[key] = ''
             }
         })
-        // const { dispatch } = this.props
+        const { dispatch } = this.props
         // 查询 表格数据
-        // dispatch({
-        //     type: 'table/fetch',
-        //     payload: {},
-        // })
+        dispatch({
+            type: 'report/fetchReportBody',
+            payload: formData,
+        })
     }
 
     render () {
-        const { report: { currentReport }, loading } = this.props
+        const { report: { currentReport, updateModalType, updateModalVisible } } = this.props
+        const dataSource = currentReport.dataSource.map((data, index) => {
+            data.s_key = index + 1
+            return data
+        })
         return (
             <div className="container">
                 <div className={styles.header}>
@@ -88,17 +78,17 @@ export default class ReportContent extends PureComponent {
                     <div className={styles.headerButtons}>
                         <Button
                             size="small"
-                            onClick={() => this.handleUpdate('updateBasic')}
+                            onClick={() => this.handleOpenUpdate('updateBasic')}
                         >配置基础信息
                         </Button>
                         <Button
                             size="small"
-                            onClick={() => this.handleUpdate('updateForm')}
+                            onClick={() => this.handleOpenUpdate('updateForm')}
                         >配置查询条件
                         </Button>
                         <Button
                             size="small"
-                            onClick={() => this.handleUpdate('updateHeader')}
+                            onClick={() => this.handleOpenUpdate('updateHeader')}
                         >配置表格列头
                         </Button>
                         <Button
@@ -115,12 +105,12 @@ export default class ReportContent extends PureComponent {
                 />
                 <QueryTable
                     columns={currentReport.columns}
-                    dataSource={this.state.dataSource}
+                    dataSource={dataSource}
                     queryData={this.queryData}
                 />
                 <ReportUpdate
-                    type={this.state.modalType}
-                    visible={this.state.modalVisible}
+                    type={updateModalType}
+                    visible={updateModalVisible}
                     onCancel={this.handleCloseModal}
                 />
             </div>

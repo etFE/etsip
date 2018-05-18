@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import { Button, Menu, Icon } from 'antd'
 
 import styles from './ReportList.less'
 
 
-export default class ReportList extends PureComponent {
+export default class ReportList extends Component {
     render () {
         const { reports, reportCode } = this.props
 

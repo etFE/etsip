@@ -1,4 +1,4 @@
-import { message, Modal } from 'antd'
+import { message } from 'antd'
 import { routerRedux } from 'dva/router'
 
 import { report } from '../services/api';
@@ -7,6 +7,8 @@ export default {
     namespace: 'report',
 
     state: {
+        updateModalType: '',
+        updateModalVisible: false,
         reportList: [],
         currentReport: {
             reportCode: null,
@@ -30,7 +32,7 @@ export default {
                 });
             }
         },
-        // 查询其中一个报表的所有数据
+        // 查询 表单 列头
         *fetchReport(_, {call, put, select}) {
             const { reportCode, modCode } = yield select(state => state.report.currentReport);
             // 自定义查询条件
@@ -46,6 +48,7 @@ export default {
                 payload: {
                     formData: formData ? JSON.parse(formData) : [],
                     columns: columns ? JSON.parse(columns) : [],
+                    dataSource: [],
                 },
             })
             // const formData = yield call(mockPromise, [
@@ -66,7 +69,7 @@ export default {
             // ])
 
         },
-
+        // 删除
         *fetchDeleteReport(_, { call, put, select }) {
             const { reportList, currentReport: { reportCode, modCode } } = yield select(state => state.report);
 
@@ -83,11 +86,80 @@ export default {
                 yield put(routerRedux.push('/report/add'))
             }
         },
-
-        *fetchUpdateReport({ payload }, { call }) {
+        // 更新基本信息
+        *fetchUpdateReport({ payload }, { call, put }) {
             const res = yield call(report.update, { data: payload })
             if (res && res.ok) {
                 message.success('修改成功！')
+                yield put({
+                    type: 'updateBasicMessage',
+                    payload,
+                })
+                yield put({ type: 'closeUpdateModal' })
+            }
+        },
+        // 更新表单
+        *fetchUpdateCustomForm({ payload }, { call, put, select }) {
+            const { reportCode, modCode } = yield select(state => state.report.currentReport)
+            // TODO: 这里还要处理下拉框的 option数据
+            const customForm = [...payload]
+            customForm.forEach((item) => {
+                if (item.type === 'select') {
+                    item.options = []
+                }
+            })
+            const res = yield call(report.addoreditwhere, {
+                data: {
+                    reportCode,
+                    modCode,
+                    whereJson: JSON.stringify(customForm),
+                },
+            })
+
+            if (res && res.ok) {
+                message.success('修改成功！')
+                yield put({
+                    type: 'saveCustomForm',
+                    payload,
+                })
+                yield put({ type: 'closeUpdateModal' })
+            }
+        },
+        // 更新列头
+        *fetchUpdateCustomHeader({ payload }, { call, put, select }) {
+            const { reportCode, modCode } = yield select(state => state.report.currentReport)
+            const res = yield call(report.addoreditwhere, {
+                data: {
+                    reportCode,
+                    modCode,
+                    headJson: JSON.stringify(payload),
+                },
+            })
+
+            if (res && res.ok) {
+                message.success('修改成功！')
+                yield put({
+                    type: 'saveCustomHeader',
+                    payload,
+                })
+                yield put({ type: 'closeUpdateModal' })
+            }
+        },
+        // 查询表格数据
+        *fetchReportBody ({ payload }, { put, call, select }) {
+            const { reportCode, modCode } = yield select(state => state.report.currentReport);
+            const res = yield call(report.querybody, {
+                data: JSON.stringify({
+                    reportCode,
+                    modCode,
+                    ...payload,
+                }),
+            })
+            if (res) {
+                yield put({
+                    type: 'saveReportBody',
+                    payload: res.list,
+                })
             }
         },
     },
@@ -104,7 +176,6 @@ export default {
         // 切换报表列表 reportlauout > reportlist
         changeCurrentReport (state, action) {
             const currentReport = state.reportList.filter((item) => item.reportCode === action.payload)[0]
-
             if (currentReport) {
                 return {
                     ...state,
@@ -137,6 +208,65 @@ export default {
                     formData: payload.formData,
                     columns: payload.columns,
                 },
+            }
+        },
+
+        updateBasicMessage (state, action) {
+            const { reportList } = state
+            const { payload } = action
+            reportList.forEach((item) => {
+                if (item.reportCode === payload.reportCode && item.modCode === payload.modCode) {
+                    Object.assign(item, payload)
+                }
+            })
+
+            return {
+                ...state,
+                reportList,
+            }
+        },
+
+        saveCustomForm (state, action) {
+            return {
+                ...state,
+                currentReport: {
+                    ...state.currentReport,
+                    formData: action.payload,
+                },
+            }
+        },
+        saveCustomHeader (state, action) {
+            return {
+                ...state,
+                currentReport: {
+                    ...state.currentReport,
+                    columns: action.payload,
+                },
+            }
+        },
+
+        saveReportBody (state, action) {
+            return {
+                ...state,
+                currentReport: {
+                    ...state.currentReport,
+                    dataSource: action.payload,
+                },
+            }
+        },
+
+        openUpdateModal (state, action) {
+            return {
+                ...state,
+                updateModalType: action.payload,
+                updateModalVisible: true,
+            }
+        },
+        closeUpdateModal (state) {
+            return {
+                ...state,
+                updateModalType: '',
+                updateModalVisible: false,
             }
         },
     },

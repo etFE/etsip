@@ -2,7 +2,9 @@
 export const loopAndSetKey = (data, prekey, callback) => {
     const dataSource = data.map((record, index) => {
         record.s_key = prekey ? `${prekey}-${index + 1}` : `${index + 1}`
-        callback(record)
+        if (callback) {
+            callback(record)
+        }
 
         if (record.children) {
             // if (record.children.length > 0) {
@@ -31,7 +33,9 @@ export const loopAndFilter = (data, s_key) => {
 // 必须无副作用回调函数
 export const loopDataAndDo = (data, callback) => {
     data.forEach((record) => {
-        callback(record)
+        if (callback) {
+            callback(record)
+        }
 
         if (record.children) {
             record.children = loopDataAndDo(record.children, callback)

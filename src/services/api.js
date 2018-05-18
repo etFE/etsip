@@ -69,6 +69,8 @@ export const report = {
     // 查询自定义表头
     queryhead: async config => createAPI('/custom/report/queryhead', 'post', config),
     queryheadjson: async config => createAPI('/custom/report/queryHeadJson', 'post', config),
+
+    querybody: async config => createAPI('/custom/report/querybody', 'post', config),
 }
 
 export const user = {
