@@ -6,7 +6,7 @@ import store from '../index'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 const devBaseUrl = 'http://localhost:3000/etsip'
-const prodBaseUrl = 'http://118.178.184.131:3000'
+const prodBaseUrl = '/etsip'
 
 // 实例化axios
 const instance = axios.create({

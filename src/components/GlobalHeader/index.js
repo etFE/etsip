@@ -98,7 +98,7 @@ export default class GlobalHeader extends PureComponent {
                     type={collapsed ? 'menu-unfold' : 'menu-fold'}
                     onClick={this.toggle}
                 />
-                <div className={styles.right}>
+                {/* <div className={styles.right}>
                     {currentUser.name ? (
                         <Dropdown overlay={menu}>
                             <span className={`${styles.action} ${styles.account}`}>
@@ -109,7 +109,7 @@ export default class GlobalHeader extends PureComponent {
                     ) : (
                         <Spin size="small" style={{ marginLeft: 8 }} />
                     )}
-                </div>
+                </div> */}
             </div>
         );
     }
