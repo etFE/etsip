@@ -3,6 +3,7 @@ import { connect } from 'dva'
 import { Button } from 'antd'
 
 import ConfigHeader from '../components/ConfigHeader'
+import { resolveSqlToHeader } from '../../../utils/utils'
 import styles from './step.less'
 
 @connect(({report}) => ({
@@ -20,11 +21,19 @@ export default class UpdateHeader extends PureComponent {
 
     render () {
         const { report: { currentReport } } = this.props
+
+        let dataSource
+        if (currentReport.columns.length > 0) {
+            dataSource = currentReport.columns
+        } else {
+            dataSource = resolveSqlToHeader(currentReport.reportBody)
+        }
+
         return (
             <div className={styles.container}>
                 <ConfigHeader
                     ref={ref => {this.customTable = ref}}
-                    dataSource={currentReport.columns}
+                    dataSource={dataSource}
                 />
                 <div className={styles.buttonGroup}>
                     <Button

@@ -71,6 +71,7 @@ export default class ReportContent extends Component {
             data.s_key = index + 1
             return data
         })
+
         return (
             <div className="container">
                 <div className={styles.header}>

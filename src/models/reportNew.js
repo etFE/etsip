@@ -72,8 +72,19 @@ export default {
                     payload: false,
                 })
 
-                const reportList = yield select(state => state.report.reportList)
-                reportList.push(payload)
+                let reportList = yield select(state => state.report.reportList)
+                const isAdded = reportList.some(item => item.reportCode === payload.reportCode)
+
+                if (isAdded) {
+                    reportList = reportList.map((item) => {
+                        if (item.reportCode === payload.reportCode) {
+                            return payload
+                        }
+                        return item
+                    })
+                } else {
+                    reportList.push(payload)
+                }
                 store.dispatch({
                     type: 'report/saveReportList',
                     payload: reportList,

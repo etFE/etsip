@@ -171,7 +171,8 @@ export const mockPromise = (data) => (
 
 // 解析sql，自动生成查询条件数据
 export const resolveSqlToForm = (sql) => {
-    const arr = sql.match(/@[a-zA-Z_]+/g)
+    let arr = sql.match(/@[a-zA-Z_]+/g)
+    arr = [...new Set(arr)]
     const data = []
     if (arr) {
         arr.forEach((item) => {
@@ -186,8 +187,9 @@ export const resolveSqlToForm = (sql) => {
 // 解析sql，自动生成自定义表头
 export const resolveSqlToHeader = (sql) => {
     const select = sql.match(/select\s.*\sfrom/)[0] // 截取 select ... from
-    ;const [,conditions] = select.split(' ') // 截取条件
+    const conditions = select.replace('select ', '').replace(' from', '') // 截取条件
     const conditionArr = conditions.split(',') // 条件分组
+
     const data = conditionArr.map((field) => {
         let text = field
         if (text.indexOf('as') !== -1) {

@@ -1,7 +1,7 @@
 import { message } from 'antd'
 import { routerRedux } from 'dva/router'
 
-import { report } from '../services/api';
+import { report } from '../services/api'
 
 export default {
     namespace: 'report',
@@ -36,18 +36,25 @@ export default {
         *fetchReport(_, {call, put, select}) {
             const { reportCode, modCode } = yield select(state => state.report.currentReport);
             // 自定义查询条件
-            const formData = yield call(report.querywherejson, {
+            let formData = yield call(report.querywherejson, {
                 data: JSON.stringify({ reportCode, modCode }),
             })
-            const columns = yield call(report.queryheadjson, {
+            let columns = yield call(report.queryheadjson, {
                 data: JSON.stringify({ reportCode, modCode }),
             })
+
+            if (!formData || !columns) {
+                message.error('请配置自定义查询条件或自定义列头，否则该报表无法正常使用！', 5)
+            }
+
+            formData = formData ? JSON.parse(formData) : []
+            columns = columns ? JSON.parse(columns) : []
 
             yield put({
                 type: 'saveCurrentReport',
                 payload: {
-                    formData: formData ? JSON.parse(formData) : [],
-                    columns: columns ? JSON.parse(columns) : [],
+                    formData,
+                    columns,
                     dataSource: [],
                 },
             })
@@ -128,7 +135,7 @@ export default {
         // 更新列头
         *fetchUpdateCustomHeader({ payload }, { call, put, select }) {
             const { reportCode, modCode } = yield select(state => state.report.currentReport)
-            const res = yield call(report.addoreditwhere, {
+            const res = yield call(report.addoredithead, {
                 data: {
                     reportCode,
                     modCode,
@@ -223,6 +230,10 @@ export default {
             return {
                 ...state,
                 reportList,
+                currentReport: {
+                    ...state.currentReport,
+                    ...payload,
+                },
             }
         },
 
