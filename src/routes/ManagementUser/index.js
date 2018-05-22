@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'dva';
-import { Card } from 'antd';
-import EditableTable from 'components/Table/EditableTable';
-import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import React, { PureComponent } from 'react'
+import { connect } from 'dva'
+import { Card } from 'antd'
+import EditableTable from 'components/Table/EditableTable'
+import EditCellText from 'components/Table/EditableTableCell/EditCellText'
+import PageHeaderLayout from '../../layouts/PageHeaderLayout'
 
 const defaultRow = {
     id: 2,
@@ -168,7 +169,7 @@ export default class ManagementUser extends PureComponent {
         dispatch({
             type: 'table/delete',
             payload: {
-                fetchMethod: 'mockPromise',
+                fetchMethod: 'maUser.delete',
                 fetchData: record,
             },
         });
@@ -201,7 +202,6 @@ export default class ManagementUser extends PureComponent {
 
                     },
                 })
-                console.log('禁用', s_key, id)
             },
         },
     ])

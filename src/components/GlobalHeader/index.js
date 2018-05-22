@@ -57,14 +57,14 @@ export default class GlobalHeader extends PureComponent {
     }
     render() {
         const {
-        currentUser,
-        collapsed,
-        fetchingNotices,
-        isMobile,
-        logo,
-        onNoticeVisibleChange,
-        onMenuClick,
-        onNoticeClear,
+            currentUser,
+            collapsed,
+            fetchingNotices,
+            isMobile,
+            logo,
+            onNoticeVisibleChange,
+            onMenuClick,
+            onNoticeClear,
         } = this.props;
 
         const menu = (
@@ -98,18 +98,18 @@ export default class GlobalHeader extends PureComponent {
                     type={collapsed ? 'menu-unfold' : 'menu-fold'}
                     onClick={this.toggle}
                 />
-                {/* <div className={styles.right}>
+                <div className={styles.right}>
                     {currentUser.name ? (
                         <Dropdown overlay={menu}>
                             <span className={`${styles.action} ${styles.account}`}>
-                                <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
+                                <Avatar size="small" className={styles.avatar} icon="user" />
                                 <span className={styles.name}>{currentUser.name}</span>
                             </span>
                         </Dropdown>
                     ) : (
                         <Spin size="small" style={{ marginLeft: 8 }} />
                     )}
-                </div> */}
+                </div>
             </div>
         );
     }

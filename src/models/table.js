@@ -42,59 +42,59 @@ export default {
         },
         *add({ payload }, { call, put }) {
             const { fetchMethod, fetchData } = payload
-            const response = yield call(getMethod(fetchMethod), fetchData)
-            // if (response && response.ok) {
-            yield put({
-                type: 'changeCell',
-                payload: {
-                    key: fetchData.s_key,
-                    dataIndex: 's_editable',
-                    value: false,
-                },
-            })
-            yield put({
-                type: 'changeCell',
-                payload: {
-                    key: fetchData.s_key,
-                    dataIndex: 's_newrow',
-                    value: false,
-                },
-            })
-            // }
+            const response = yield call(getMethod(fetchMethod), { data: fetchData })
+            if (response && response.ok) {
+                yield put({
+                    type: 'changeCell',
+                    payload: {
+                        key: fetchData.s_key,
+                        dataIndex: 's_editable',
+                        value: false,
+                    },
+                })
+                yield put({
+                    type: 'changeCell',
+                    payload: {
+                        key: fetchData.s_key,
+                        dataIndex: 's_newrow',
+                        value: false,
+                    },
+                })
+            }
         },
         *update({ payload }, { call, put }) {
             const { fetchMethod, fetchData } = payload
-            const response = yield call(getMethod(fetchMethod), fetchData)
-            // if (response && response.ok) {
-            yield put({
-                type: 'changeCell',
-                payload: {
-                    key: fetchData.s_key,
-                    dataIndex: 's_editable',
-                    value: false,
-                },
-            })
-            // }
+            const response = yield call(getMethod(fetchMethod), { data: fetchData })
+            if (response && response.ok) {
+                yield put({
+                    type: 'changeCell',
+                    payload: {
+                        key: fetchData.s_key,
+                        dataIndex: 's_editable',
+                        value: false,
+                    },
+                })
+            }
         },
         *delete({ payload }, { call, put }) {
             const { fetchMethod, fetchData } = payload
             let response
             if (!fetchData.s_newrow) {
-                response = yield call(getMethod(fetchMethod), fetchData)
+                response = yield call(getMethod(fetchMethod), { data: fetchData })
             }
-            // if ((response && response.ok) || fetchData.s_newrow) {
-            yield put({
-                type: 'deleteRecord',
-                payload: fetchData,
-            })
-            // }
+            if ((response && response.ok) || fetchData.s_newrow) {
+                yield put({
+                    type: 'deleteRecord',
+                    payload: fetchData,
+                })
+            }
         },
         // 自定义连接远程
         *fetchAndTodo({ payload, callback }, { call, put }) {
             const { fetchMethod, fetchData } = payload
             let response
             if (!fetchData.s_newrow) {
-                response = yield call(getMethod(fetchMethod), fetchData)
+                response = yield call(getMethod(fetchMethod), { data: fetchData })
             }
             callback(response)
         },

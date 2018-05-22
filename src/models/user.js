@@ -1,8 +1,9 @@
-import { routerRedux } from 'dva/router';
-import { user, fakeAccountLogin } from '../services/api';
-import { query as queryUsers, queryCurrent } from '../services/user';
-import { setAuthority } from '../utils/authority';
-import { reloadAuthorized } from '../utils/Authorized';
+import { routerRedux } from 'dva/router'
+import { message } from 'antd'
+import { user, fakeAccountLogin } from '../services/api'
+import { query as queryUsers, queryCurrent } from '../services/user'
+import { setAuthority } from '../utils/authority'
+import { reloadAuthorized } from '../utils/Authorized'
 
 export default {
     namespace: 'user',
@@ -15,18 +16,32 @@ export default {
 
     effects: {
         *login ({ payload }, { call, put }) {
-            // const response = yield call(user.login, payload)
-
-            payload.userName = payload.username
-            const response = yield call(fakeAccountLogin, payload);
-            yield put({
-                type: 'changeLoginStatus',
-                payload: response,
-            });
-            if (response.status === 'ok') {
-                reloadAuthorized();
-                yield put(routerRedux.push('/'));
+            const response = yield call(user.login, {
+                data: payload,
+            })
+            if (response.ok) {
+                message.success('登录成功！')
+                yield put({
+                    type: 'changeLoginStatus',
+                    payload: {
+                        status: true,
+                        type: 'normal',
+                        currentAuthority: 'admin',
+                    },
+                })
+                reloadAuthorized()
+                yield put(routerRedux.push('/'))
             }
+            // payload.userName = payload.username
+            // const response = yield call(fakeAccountLogin, payload);
+            // yield put({
+            //     type: 'changeLoginStatus',
+            //     payload: response,
+            // });
+            // if (response.status === 'ok') {
+            //     reloadAuthorized();
+            //     yield put(routerRedux.push('/'));
+            // }
         },
         *logout(_, { put, select }) {
             try {
@@ -56,10 +71,13 @@ export default {
             });
         },
         *fetchCurrent (_, { call, put }) {
-            const response = yield call(queryCurrent);
+            // const response = yield call(queryCurrent);
             yield put({
                 type: 'saveCurrentUser',
-                payload: response,
+                payload: {
+                    name: 'Admin',
+                    userid: '001',
+                },
             });
         },
     },
