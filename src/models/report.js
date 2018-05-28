@@ -108,7 +108,6 @@ export default {
         // 更新表单
         *fetchUpdateCustomForm({ payload }, { call, put, select }) {
             const { reportCode, modCode } = yield select(state => state.report.currentReport)
-            // TODO: 这里还要处理下拉框的 option数据
             const customForm = [...payload]
             const isPass = customForm.some((item) => {
                 if (item.type === 'select') {
