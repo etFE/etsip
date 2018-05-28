@@ -16,7 +16,17 @@ export default class EditCellSelect extends PureComponent {
     }
     render() {
         const { value, options } = this.state;
-        const { editable } = this.props
+        const { record, onlyNew } = this.props
+
+        let letsEdit = true
+
+        if (onlyNew) {
+            if (typeof onlyNew === 'boolean') {
+                letsEdit = !!record.s_newrow
+            } else if (typeof onlyNew === 'function') {
+                letsEdit = onlyNew(record)
+            }
+        }
         const optionEl = options.map((item) => (
             <Select.Option key={item.value} value={item.value}>{item.text}</Select.Option>
         ))
@@ -24,7 +34,7 @@ export default class EditCellSelect extends PureComponent {
         return (
             <div className={`${styles.editableCell} ${styles.cellSelect}`}>
                 {
-                    editable ? (
+                    record.s_editable && letsEdit ? (
                         <Select
                             defaultValue={value}
                             size="small"
@@ -43,14 +53,13 @@ export default class EditCellSelect extends PureComponent {
 }
 
 EditCellSelect.defaultProps = {
-    editable: false,
     onChange: () => {},
     value: '',
     options: [],
 }
 EditCellSelect.propTypes = {
-    editable: PropTypes.bool,
     onChange: PropTypes.func,
     value: PropTypes.string,
     options: PropTypes.array,
+    record: PropTypes.object.isRequired,
 }

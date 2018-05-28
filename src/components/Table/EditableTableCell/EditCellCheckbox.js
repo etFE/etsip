@@ -16,13 +16,23 @@ export default class EditCellCheckbox extends PureComponent {
     }
     render() {
         const { checked } = this.state;
-        const { editable } = this.props
+        const { record, onlyNew } = this.props
+
+        let letsEdit = true
+
+        if (onlyNew) {
+            if (typeof onlyNew === 'boolean') {
+                letsEdit = !!record.s_newrow
+            } else if (typeof onlyNew === 'function') {
+                letsEdit = onlyNew(record)
+            }
+        }
 
         return (
             <div className={`${styles.editableCell} ${styles.cellCheckbox}`}>
                 <Checkbox
                     checked={checked}
-                    disabled={!editable}
+                    disabled={!letsEdit}
                     onChange={this.handleChange}
                 />
             </div>
@@ -31,10 +41,9 @@ export default class EditCellCheckbox extends PureComponent {
 }
 
 EditCellCheckbox.defaultProps = {
-    editable: false,
     onChange: () => {},
 }
 EditCellCheckbox.propTypes = {
-    editable: PropTypes.bool,
     onChange: PropTypes.func,
+    record: PropTypes.object.isRequired,
 }

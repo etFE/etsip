@@ -4,7 +4,9 @@ import { Input } from 'antd'
 
 import styles from './index.less'
 
-export default class EditCellText extends PureComponent {
+const { TextArea } = Input
+
+export default class EditCellTextarea extends PureComponent {
     state = {
         value: this.props.value,
     }
@@ -17,6 +19,7 @@ export default class EditCellText extends PureComponent {
     render() {
         const { value } = this.state
         const { record, onlyNew } = this.props
+
         let letsEdit = true
 
         if (onlyNew) {
@@ -31,7 +34,8 @@ export default class EditCellText extends PureComponent {
             <div className={`${styles.editableCell} ${styles.cellText}`}>
                 {
                     record.s_editable && letsEdit ? (
-                        <Input
+                        <TextArea
+                            autosize={{ minRows: 3, maxRows: 6 }}
                             value={value}
                             size="small"
                             onChange={this.handleChange}
@@ -43,10 +47,10 @@ export default class EditCellText extends PureComponent {
     }
 }
 
-EditCellText.defaultProps = {
+EditCellTextarea.defaultProps = {
     onChange: () => {},
 }
-EditCellText.propTypes = {
+EditCellTextarea.propTypes = {
     onChange: PropTypes.func,
     record: PropTypes.object.isRequired,
 }

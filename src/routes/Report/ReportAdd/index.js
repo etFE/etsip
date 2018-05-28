@@ -53,7 +53,7 @@ export default class ReportAdd extends PureComponent {
                             exact={item.exact}
                         />
                     ))}
-                    <Redirect exact from="/report/add" to="/report/add/step1" />
+                    <Redirect exact from="/customize/report/add" to="/customize/report/add/step1" />
                 </Switch>
             </Fragment>
         )

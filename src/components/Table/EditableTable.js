@@ -3,14 +3,10 @@ import PropTypes from 'prop-types'
 import { Button } from 'antd'
 
 import BasicTable from './BasicTable'
-import EditableTableCell from './EditableTableCell'
+import EditableTableCell, { changeToEditCell  } from './EditableTableCell'
 import styles from './EditableTable.less'
 
 const {
-    EditCellText,
-    EditCellCheckbox,
-    EditCellSelect,
-    EditCellDatepicker,
     EditCellOperations,
 } = EditableTableCell
 
@@ -77,64 +73,7 @@ export default class EditableTable extends PureComponent {
             ),
         })
         // 根据编辑类型，渲染不用编辑类型的单元格
-        columns = columns.map((item) => {
-            if (item.editor) {
-                switch (item.editor.type) {
-                case 'text':
-                    Object.assign(item, {
-                        render: (text, record) => (
-                            <EditCellText
-                                value={text}
-                                editable={record.s_editable}
-                                onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                            />
-                        ),
-                    })
-                    break;
-                case 'checkbox':
-                    Object.assign(item, {
-                        render: (text, record) => (
-                            <EditCellCheckbox
-                                value={text}
-                                editable={record.s_editable}
-                                onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                            />
-                        ),
-                    })
-                    break;
-                case 'select':
-                    Object.assign(item, {
-                        render: (text, record) => {
-                            return (
-                                <EditCellSelect
-                                    value={text}
-                                    editable={record.s_editable}
-                                    options={item.editor.options}
-                                    onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                                />
-                            )
-                        },
-                    })
-                    break;
-                case 'date':
-                    Object.assign(item, {
-                        render: (text, record) => {
-                            return (
-                                <EditCellDatepicker
-                                    value={text}
-                                    editable={record.s_editable}
-                                    onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                                />
-                            )
-                        },
-                    })
-                    break;
-                default:
-                    break;
-                }
-            }
-            return item
-        })
+        columns = changeToEditCell(columns, this.onCellChange)
 
         return columns
     }

@@ -39,7 +39,17 @@ const menuData = [
     {
         name: '自定义报表',
         icon: 'area-chart',
-        path: 'report',
+        path: 'customize',
+        children: [
+            {
+                name: '报表维护',
+                path: 'report',
+            },
+            {
+                name: '字典维护',
+                path: 'dictionary',
+            },
+        ],
     },
 ]
 

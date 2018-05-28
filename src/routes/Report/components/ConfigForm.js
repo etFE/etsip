@@ -30,11 +30,25 @@ export default class ConfigForm extends PureComponent {
                         ],
                     },
                 },
-                // {
-                //     title: '更多配置',
-                //     dataIndex: 'operation',
-                //     editor: { type: 'text' },
-                // },
+                {
+                    title: '下拉框数据源',
+                    dataIndex: 'dictCode',
+                    editor: {
+                        type: 'select',
+                        options: [
+                            { value: 'input', text: '文本框' },
+                            { value: 'select', text: '下拉框' },
+                            { value: 'datepicker', text: '日期框' },
+                            { value: 'checkbox', text: '复选框' },
+                        ],
+                        onlyNew (record) {
+                            if (record.type === 'select') {
+                                return true
+                            }
+                            return false
+                        },
+                    },
+                },
             ],
             dataSource: [],
         }

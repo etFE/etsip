@@ -16,15 +16,25 @@ export default class EditCellDatepicker extends PureComponent {
     }
     render() {
         const { value } = this.state;
-        const { editable, dateFormat } = this.props
+        const { record, onlyNew, format } = this.props
+
+        let letsEdit = true
+
+        if (onlyNew) {
+            if (typeof onlyNew === 'boolean') {
+                letsEdit = !!record.s_newrow
+            } else if (typeof onlyNew === 'function') {
+                letsEdit = onlyNew(record)
+            }
+        }
 
         return (
             <div className={`${styles.editableCell} ${styles.cellDatepicker}`}>
                 {
-                    editable ? (
+                    record.s_editable && letsEdit ? (
                         <DatePicker
-                            defaultValue={moment(value || new Date(), dateFormat)}
-                            format={dateFormat}
+                            defaultValue={moment(value || new Date(), format)}
+                            format={format}
                             size="small"
                             onChange={this.handleChange}
                         />
@@ -37,14 +47,13 @@ export default class EditCellDatepicker extends PureComponent {
 
 
 EditCellDatepicker.defaultProps = {
-    editable: false,
     onChange: () => {},
-    dateFormat: 'YYYY-MM-DD',
+    format: 'YYYY-MM-DD',
     value: '',
 }
 EditCellDatepicker.propTypes = {
-    editable: PropTypes.bool,
+    record: PropTypes.object.isRequired,
     onChange: PropTypes.func,
-    dateFormat: PropTypes.string,
+    format: PropTypes.string,
     value: PropTypes.string,
 }

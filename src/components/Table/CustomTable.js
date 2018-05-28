@@ -2,14 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // import styles from './CustomTable.less'
 import BasicTable from './BasicTable'
-import EditableTableCell from './EditableTableCell'
-
-const {
-    EditCellText,
-    EditCellCheckbox,
-    EditCellSelect,
-    EditCellDatepicker,
-} = EditableTableCell
+import { changeToEditCell } from './EditableTableCell'
 
 /**
  * 自定义表格 通过 editable控制是否可编辑，没有操作按钮列，别的东西都需要自己在外面配置
@@ -35,64 +28,7 @@ export default class EditableTable extends Component {
 
         if (this.props.editable) {
             // 根据编辑类型，渲染不用编辑类型的单元格
-            columns = columns.map((item) => {
-                if (item.editor) {
-                    switch (item.editor.type) {
-                    case 'text':
-                        Object.assign(item, {
-                            render: (text, record) => (
-                                <EditCellText
-                                    value={text}
-                                    editable={record.s_editable}
-                                    onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                                />
-                            ),
-                        })
-                        break;
-                    case 'checkbox':
-                        Object.assign(item, {
-                            render: (text, record) => (
-                                <EditCellCheckbox
-                                    value={text}
-                                    editable={record.s_editable}
-                                    onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                                />
-                            ),
-                        })
-                        break;
-                    case 'select':
-                        Object.assign(item, {
-                            render: (text, record) => {
-                                return (
-                                    <EditCellSelect
-                                        value={text}
-                                        editable={record.s_editable}
-                                        options={item.editor.options}
-                                        onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                                    />
-                                )
-                            },
-                        })
-                        break;
-                    case 'date':
-                        Object.assign(item, {
-                            render: (text, record) => {
-                                return (
-                                    <EditCellDatepicker
-                                        value={text}
-                                        editable={record.s_editable}
-                                        onChange={this.onCellChange(record.s_key, item.dataIndex)}
-                                    />
-                                )
-                            },
-                        })
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                return item
-            })
+            columns = changeToEditCell(columns, this.onCellChange)
         }
         return columns
     }

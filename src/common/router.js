@@ -94,24 +94,28 @@ export const getRouterData = app => {
             component: dynamicWrapper(app, ['table'], () => import('../routes/ManagementRep')),
         },
 
-        '/report': {
+        '/customize/report': {
             component: dynamicWrapper(app, ['report', 'reportNew','table'], () => import('../routes/Report/ReportLayout')),
         },
-        '/report/add': {
+        '/customize/report/add': {
             component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/index')),
         },
-        '/report/add/step1': {
+        '/customize/report/add/step1': {
             component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/Step1')),
         },
-        '/report/add/step2': {
+        '/customize/report/add/step2': {
             component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/Step2')),
         },
-        '/report/add/step3': {
+        '/customize/report/add/step3': {
             component: dynamicWrapper(app, [], () => import('../routes/Report/ReportAdd/Step3')),
         },
-        '/report/:id': {
+        '/customize/report/:id': {
             component: dynamicWrapper(app, [], () => import('../routes/Report/ReportContent')),
         },
+        '/customize/dictionary': {
+            component: dynamicWrapper(app, ['dictionary'], () => import('../routes/Dictionary')),
+        },
+
 
         '/exception/403': {
             component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),

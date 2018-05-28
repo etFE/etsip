@@ -73,6 +73,13 @@ export const report = {
     querybody: async config => createAPI('/custom/report/querybody', 'post', config),
 }
 
+export const dictionary = {
+    query: async config => createAPI('/custom/dict/query', 'get', config),
+    add: async config => createAPI('/custom/dict/add', 'post', config),
+    update: async config => createAPI('/custom/dict/update', 'post', config),
+    delete: async config => createAPI('/custom/dict/delete', 'post', config),
+}
+
 export const user = {
     login: async config => createAPI('/user/login', 'post', config),
 }

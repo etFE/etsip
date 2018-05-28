@@ -27,7 +27,7 @@ export default class ReportLayout extends PureComponent {
 
     selectReport = (reportKey) => {
         const { dispatch, location } = this.props
-        const path = `/report/${reportKey}`
+        const path = `/customize/report/${reportKey}`
         if (reportKey && location.pathname !== path) {
             // 设置active
             dispatch({
@@ -45,14 +45,14 @@ export default class ReportLayout extends PureComponent {
     addReport = () => {
         const { dispatch, location } = this.props
 
-        if (location.pathname !== '/report/add') {
+        if (location.pathname !== '/customize/report/add') {
             // 清空状态
             dispatch({
                 type: 'reportNew/clearStore',
             })
             // 跳转路由
             dispatch(
-                routerRedux.push('/report/add')
+                routerRedux.push('/customize/report/add')
             )
             // 设置active为空
             dispatch({
@@ -64,7 +64,7 @@ export default class ReportLayout extends PureComponent {
 
     render () {
         const { report: { reportList, currentReport }, loading, match, routerData } = this.props
-        const redirectRoute = currentReport.reportCode ? `/report/${currentReport.reportCode}` : '/report/add'
+        const redirectRoute = currentReport.reportCode ? `/customize/report/${currentReport.reportCode}` : '/customize/report/add'
 
         return (
             <PageHeaderLayout>
@@ -89,7 +89,7 @@ export default class ReportLayout extends PureComponent {
                                             exact={item.exact}
                                         />
                                     ))}
-                                    <Redirect exact from="/report" to={redirectRoute} />
+                                    <Redirect exact from="/customize/report" to={redirectRoute} />
                                 </Switch>
                             </div>
                         </div>

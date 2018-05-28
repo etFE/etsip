@@ -19,7 +19,7 @@ export default class ReportContent extends Component {
 
         if (!currentReport.reportCode) {
             dispatch(
-                routerRedux.push('/report/add')
+                routerRedux.push('/customize/report/add')
             )
         }
     }

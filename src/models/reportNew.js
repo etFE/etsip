@@ -135,7 +135,7 @@ export default {
                     payload: fields.reportCode,
                 })
                 store.dispatch({ type: 'report/fetchReport' })
-                yield put(routerRedux.push(`/report/${fields.reportCode}`))
+                yield put(routerRedux.push(`/customize/report/${fields.reportCode}`))
             }
         },
     },

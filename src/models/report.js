@@ -90,7 +90,7 @@ export default {
                     type: 'saveReportList',
                     payload: data,
                 })
-                yield put(routerRedux.push('/report/add'))
+                yield put(routerRedux.push('/customize/report/add'))
             }
         },
         // 更新基本信息
@@ -189,6 +189,9 @@ export default {
                     currentReport: {
                         ...state.currentReport,
                         ...currentReport,
+                        formData: [],
+                        columns: [],
+                        dataSource: [],
                     },
                 }
             }
