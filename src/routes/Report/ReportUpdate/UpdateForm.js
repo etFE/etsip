@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'dva'
 import { Button } from 'antd'
 
@@ -9,13 +9,12 @@ import styles from './step.less'
 @connect(({report}) => ({
     report,
 }))
-export default class UpdateForm extends PureComponent {
+export default class UpdateForm extends Component {
     handleSave = () => {
         const { dispatch } = this.props
-
         dispatch({
             type: 'report/fetchUpdateCustomForm',
-            payload: this.configForm.props.dataSource,
+            payload: this.configForm.state.dataSource,
         })
     }
 
@@ -27,7 +26,6 @@ export default class UpdateForm extends PureComponent {
         } else {
             dataSource = resolveSqlToForm(currentReport.reportBody)
         }
-
         return (
             <div className={styles.container}>
                 <ConfigForm

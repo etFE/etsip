@@ -66,11 +66,23 @@ export const changeToEditCell = (data, onCellChange) => {
                         return (
                             <EditCellSelect
                                 value={text}
-                                onlyNew={item.editor.onlyNew}
                                 record={record}
-                                options={item.editor.options}
+                                config={item.editor}
                                 onChange={onCellChange(record.s_key, item.dataIndex)}
                             />
+                            // <EditCellSelect
+                            //     value={text}
+                            //     onlyNew={item.editor.onlyNew}
+                            //     record={record}
+                            //     options={item.editor.options}
+                            //     onChange={(value) => {
+                            //         onCellChange(record.s_key, item.dataIndex)(value)
+                            //         // TODO: 这里留了在 editor里配置onChange 的钩子。其他的未配。要用再配
+                            //         if (item.editor.onChange) {
+                            //             item.editor.onChange(value, record)
+                            //         }
+                            //     }}
+                            // />
                         )
                     },
                 })

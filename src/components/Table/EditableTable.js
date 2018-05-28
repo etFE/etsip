@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'antd'
 
@@ -15,7 +15,7 @@ const {
  * 编辑类型 -> text select checkbox datepicker
  * s_前缀来标识内置属性
  */
-export default class EditableTable extends PureComponent {
+export default class EditableTable extends Component {
     // 单元格数据更改
     onCellChange = (key, dataIndex) => {
         return (value) => {

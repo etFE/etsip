@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep'
+
 // 遍历数据及子数据，增加s_key字段
 export const loopAndSetKey = (data, prekey, callback) => {
     const dataSource = data.map((record, index) => {
@@ -32,7 +34,8 @@ export const loopAndFilter = (data, s_key) => {
 // 递归数据，并做什么事情
 // 必须无副作用回调函数
 export const loopDataAndDo = (data, callback) => {
-    data.forEach((record) => {
+    const dataSource = cloneDeep(data)
+    dataSource.forEach((record) => {
         if (callback) {
             callback(record)
         }
@@ -41,6 +44,6 @@ export const loopDataAndDo = (data, callback) => {
             record.children = loopDataAndDo(record.children, callback)
         }
     })
-    return data
+    return dataSource
 }
 

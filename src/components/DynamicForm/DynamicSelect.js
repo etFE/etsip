@@ -1,14 +1,55 @@
 import React, { PureComponent } from 'react'
+import Debounce from 'lodash-decorators/debounce';
 import { Select } from 'antd'
-
-const { Option } = Select
+import createAPI from '../../services/createAPI'
 
 export default class DynamicSelect extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             value: props.value,
+            options: [],
         }
+
+        this.handleSearch = this.handleSearch.bind(this)
+    }
+
+    componentWillMount () {
+        const { options, url } = this.props
+        if (options) {
+            this.setState({
+                options,
+            })
+        } else if (url) {
+            this.fetchOptions(url)
+        }
+    }
+
+    fetchOptions = async (url, params) => {
+        const res = await createAPI(url, 'get', {
+            params,
+        })
+        if (res) {
+            this.setState({
+                options: res.list,
+            })
+        }
+    }
+
+    generateOptions = (options) => {
+        const { valueField, textField } = this.props
+        return options.map((item) => {
+            // 判断字段名。设置的。还是 默认value text
+            const theValue = valueField || 'value'
+            const theText = textField || 'text'
+            return (
+                <Select.Option
+                    key={item[theValue]}
+                    value={item[theValue]}
+                >{item[theText]}
+                </Select.Option>
+            )
+        })
     }
 
     handleChange = (value) => {
@@ -16,6 +57,13 @@ export default class DynamicSelect extends PureComponent {
             value,
         })
         this.props.onChange(value)
+    }
+
+    @Debounce(500)
+    handleSearch (value) {
+        if (this.props.url) {
+            this.fetchOptions(this.props.url, { key: value })
+        }
     }
 
     render () {
@@ -29,10 +77,9 @@ export default class DynamicSelect extends PureComponent {
                 value={this.state.value}
                 disabled={this.props.disabled}
                 onChange={this.handleChange}
+                onSearch={this.handleSearch}
             >
-                {this.props.options.map((option) => (
-                    <Option key={option.id}>{option.text}</Option>
-                ))}
+                { this.generateOptions(this.state.options) }
             </Select>
         )
     }

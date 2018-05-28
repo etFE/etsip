@@ -1,4 +1,4 @@
-import React, { PureComponent, Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import { Button, Modal } from 'antd'

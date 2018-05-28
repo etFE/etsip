@@ -8,9 +8,12 @@ const FormItem = Form.Item
 
 class InitForm extends PureComponent {
     setDynamicType = (item) => {
-        if (item.type === 'select' && item.options) {
+        if (item.type === 'select' && (item.options || item.dictCode)) {
             return (
-                <DynamicSelect options={item.options} />
+                <DynamicSelect
+                    options={item.options}
+                    url={`/custom/dict/querydict?dictCode=${item.dictCode}`}
+                />
             )
         } else if (item.type === 'checkbox') {
             return (

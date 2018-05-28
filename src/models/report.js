@@ -110,11 +110,20 @@ export default {
             const { reportCode, modCode } = yield select(state => state.report.currentReport)
             // TODO: 这里还要处理下拉框的 option数据
             const customForm = [...payload]
-            customForm.forEach((item) => {
+            const isPass = customForm.some((item) => {
                 if (item.type === 'select') {
-                    item.options = []
+                    if (!item.dictCode) {
+                        return false
+                    }
                 }
+                return true
             })
+
+            if (!isPass) {
+                message.error('数据源必须要配置')
+                return
+            }
+
             const res = yield call(report.addoreditwhere, {
                 data: {
                     reportCode,

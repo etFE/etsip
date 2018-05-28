@@ -40,7 +40,7 @@ export default class Step2 extends PureComponent {
 
         dispatch({
             type: 'reportNew/fetchAddCustomForm',
-            payload: this.configForm.props.dataSource,
+            payload: this.configForm.state.dataSource,
         })
     }
 

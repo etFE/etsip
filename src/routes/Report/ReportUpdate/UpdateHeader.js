@@ -11,11 +11,10 @@ import styles from './step.less'
 }))
 export default class UpdateHeader extends PureComponent {
     handleSave = () => {
-        const { dataSource } = this.customTable.props
         const { dispatch } = this.props
         dispatch({
             type: 'report/fetchUpdateCustomHeader',
-            payload: dataSource,
+            payload: this.configHeader.state.dataSource,
         })
     }
 
@@ -32,7 +31,7 @@ export default class UpdateHeader extends PureComponent {
         return (
             <div className={styles.container}>
                 <ConfigHeader
-                    ref={ref => {this.customTable = ref}}
+                    ref={ref => {this.configHeader = ref}}
                     dataSource={dataSource}
                 />
                 <div className={styles.buttonGroup}>

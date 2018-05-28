@@ -6,10 +6,10 @@ const FormItem = Form.Item
 const { TextArea } = Input
 
 const modOptions = [
-    { id: '01', text: '预算系统' },
-    { id: '02', text: '财务系统' },
-    { id: '03', text: '人资系统' },
-    { id: '04', text: '物流系统' },
+    { value: '01', text: '预算系统' },
+    { value: '02', text: '财务系统' },
+    { value: '03', text: '人资系统' },
+    { value: '04', text: '物流系统' },
 ]
 
 const CustomizedForm = (props) => {

@@ -1,4 +1,4 @@
-import React, { Component, PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Button } from 'antd';
 import CustomTable from 'components/Table/CustomTable';
@@ -18,10 +18,6 @@ const defaultRow = {
     // children: [],
 }
 
-@connect(({ table, loading }) => ({
-    table,
-    loading: loading.models.table,
-}))
 export default class ConfigHeader extends Component {
     constructor (props) {
         super(props)

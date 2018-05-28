@@ -27,11 +27,10 @@ export default class Step3 extends PureComponent {
         )
     }
     handleComplete = () => {
-        const { dataSource } = this.customTable.props
         const { dispatch } = this.props
         dispatch({
             type: 'reportNew/fetchAddCustomHeader',
-            payload: dataSource,
+            payload: this.customTable.state.dataSource,
         })
     }
 
