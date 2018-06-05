@@ -45,6 +45,8 @@ export default class ReportAdd extends Component {
         return (
             <Modal
                 width="800px"
+                keyboard={false}
+                maskClosable={false}
                 title={this.getCurrentTitle()}
                 visible={this.props.visible}
                 onCancel={this.props.onCancel}

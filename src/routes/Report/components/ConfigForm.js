@@ -12,6 +12,7 @@ export default class ConfigForm extends Component {
                 {
                     title: '字段名',
                     dataIndex: 'id',
+                    editor: { type: 'text' },
                 },
                 {
                     title: '显示名',

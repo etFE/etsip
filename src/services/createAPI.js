@@ -16,6 +16,8 @@ const instance = axios.create({
 
 // 请求拦截器 可以用于token
 instance.interceptors.request.use((config) => {
+    // 这里每次请求的时候判断当前的cookie。如果为空，定向到登录页
+    // console.log(document.cookie)
     if (config.data && typeof config.data === 'object') {
         config.data = qs.stringify(config.data)
     }

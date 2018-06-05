@@ -191,12 +191,18 @@ export const resolveSqlToHeader = (sql) => {
     const conditionArr = conditions.split(',') // 条件分组
 
     const data = conditionArr.map((field) => {
+        // 去除前置空格
         let text = field
-        if (text.indexOf('as') !== -1) {
+        text = text.replace(/^\s|\s$/, '')
+        text = text.replace(/^\s|\s$/, '')
+        if (text.indexOf(' as ') !== -1) {
             ;[,text] = text.split(' as ')
         }
-        if (text.indexOf('.') !== -1) {
+        if (text.indexOf(' ') !== -1) {
             ;[,text] = text.split(' ')
+        }
+        if (text.indexOf('.') !== -1) {
+            ;[,text] = text.split('.')
         }
         return {
             dataIndex: text,

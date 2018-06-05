@@ -2,7 +2,7 @@ import { routerRedux } from 'dva/router'
 import { message } from 'antd'
 import { user, fakeAccountLogin } from '../services/api'
 import { query as queryUsers, queryCurrent } from '../services/user'
-import { setAuthority } from '../utils/authority'
+import { setAuthority, setUserMessage, getUserMessage } from '../utils/authority'
 import { reloadAuthorized } from '../utils/Authorized'
 
 export default {
@@ -21,27 +21,25 @@ export default {
             })
             if (response.ok) {
                 message.success('登录成功！')
+
+                const userMsg = JSON.parse(response.user)
+
+                setUserMessage({
+                    userName: userMsg.username,
+                    userId: userMsg.id,
+                    nickName: userMsg.nickname,
+                })
                 yield put({
                     type: 'changeLoginStatus',
                     payload: {
                         status: true,
                         type: 'normal',
-                        currentAuthority: 'admin',
+                        currentAuthority: userMsg.menus || 'admin',
                     },
                 })
                 reloadAuthorized()
                 yield put(routerRedux.push('/'))
             }
-            // payload.userName = payload.username
-            // const response = yield call(fakeAccountLogin, payload);
-            // yield put({
-            //     type: 'changeLoginStatus',
-            //     payload: response,
-            // });
-            // if (response.status === 'ok') {
-            //     reloadAuthorized();
-            //     yield put(routerRedux.push('/'));
-            // }
         },
         *logout(_, { put, select }) {
             try {
@@ -52,6 +50,7 @@ export default {
                 urlParams.searchParams.set('redirect', pathname);
                 window.history.replaceState(null, 'login', urlParams.href);
             } finally {
+                setUserMessage()
                 yield put({
                     type: 'changeLoginStatus',
                     payload: {
@@ -70,15 +69,20 @@ export default {
                 payload: response,
             });
         },
-        *fetchCurrent (_, { call, put }) {
-            // const response = yield call(queryCurrent);
-            yield put({
-                type: 'saveCurrentUser',
-                payload: {
-                    name: 'Admin',
-                    userid: '001',
-                },
-            });
+        *fetchCurrent (_, { put }) {
+            const userMsg = getUserMessage()
+            if (!userMsg || !userMsg.userName) {
+                yield put({ type: 'logout' })
+            } else {
+                const res = {
+                    name: userMsg.nickName || userMsg.userName,
+                    userid: userMsg.userId,
+                }
+                yield put({
+                    type: 'saveCurrentUser',
+                    payload: res,
+                });
+            }
         },
     },
 

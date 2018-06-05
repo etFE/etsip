@@ -2,11 +2,13 @@ import { message } from 'antd'
 import { routerRedux } from 'dva/router'
 
 import { report } from '../services/api'
+import { resolveSqlToForm, resolveSqlToHeader } from '../utils/utils'
 
 export default {
     namespace: 'report',
 
     state: {
+        updateModalGoNext: false,
         updateModalType: '',
         updateModalVisible: false,
         reportList: [],
@@ -94,7 +96,8 @@ export default {
             }
         },
         // 更新基本信息
-        *fetchUpdateReport({ payload }, { call, put }) {
+        *fetchUpdateReport({ payload }, { call, put, select }) {
+            const { reportBody } = yield select(state => state.report.currentReport)
             const res = yield call(report.update, { data: payload })
             if (res && res.ok) {
                 message.success('修改成功！')
@@ -103,11 +106,38 @@ export default {
                     payload,
                 })
                 yield put({ type: 'closeUpdateModal' })
+
+                // 判断更新的报表sql体 是否改变了，如果改变了，那么之后的操作都要进入下一步
+                if (reportBody !== payload.reportBody) {
+                    yield put({
+                        type: 'changeModalGoNext',
+                        payload: true,
+                    })
+                    // 改变后，再初始化查询条件和表格列头
+                    yield put({
+                        type: 'saveCustomForm',
+                        payload: resolveSqlToForm(payload.reportBody),
+                    })
+                    yield put({
+                        type: 'saveCustomHeader',
+                        payload: resolveSqlToHeader(payload.reportBody),
+                    })
+                    yield put({
+                        type: 'openUpdateModal',
+                        payload: 'updateForm',
+                    })
+                } else {
+                    yield put({
+                        type: 'changeModalGoNext',
+                        payload: false,
+                    })
+                }
             }
         },
         // 更新表单
         *fetchUpdateCustomForm({ payload }, { call, put, select }) {
             const { reportCode, modCode } = yield select(state => state.report.currentReport)
+            const updateModalGoNext = yield select(state => state.report.updateModalGoNext)
             const customForm = [...payload]
             const isPass = customForm.some((item) => {
                 if (item.type === 'select') {
@@ -138,6 +168,14 @@ export default {
                     payload,
                 })
                 yield put({ type: 'closeUpdateModal' })
+
+                // 判断是否改变了sql体，是的话，继续跳到下一步
+                if (updateModalGoNext) {
+                    yield put({
+                        type: 'openUpdateModal',
+                        payload: 'updateHeader',
+                    })
+                }
             }
         },
         // 更新列头
@@ -158,6 +196,10 @@ export default {
                     payload,
                 })
                 yield put({ type: 'closeUpdateModal' })
+                yield put({
+                    type: 'changeModalGoNext',
+                    payload: false,
+                })
             }
         },
         // 查询表格数据
@@ -228,7 +270,7 @@ export default {
                 },
             }
         },
-
+        // 更新基本信息
         updateBasicMessage (state, action) {
             const { reportList } = state
             const { payload } = action
@@ -247,7 +289,7 @@ export default {
                 },
             }
         },
-
+        // 保存自定义表单
         saveCustomForm (state, action) {
             return {
                 ...state,
@@ -257,6 +299,7 @@ export default {
                 },
             }
         },
+        // 保存自定义列头
         saveCustomHeader (state, action) {
             return {
                 ...state,
@@ -266,7 +309,7 @@ export default {
                 },
             }
         },
-
+        // 保存当前报表的表格数据
         saveReportBody (state, action) {
             return {
                 ...state,
@@ -277,6 +320,7 @@ export default {
             }
         },
 
+        // 打开更新弹窗
         openUpdateModal (state, action) {
             return {
                 ...state,
@@ -284,11 +328,19 @@ export default {
                 updateModalVisible: true,
             }
         },
+        // 关闭更新弹窗
         closeUpdateModal (state) {
             return {
                 ...state,
                 updateModalType: '',
                 updateModalVisible: false,
+            }
+        },
+        // 改变状态 用来判断更新完成后是否需要进入下一步
+        changeModalGoNext (state, action) {
+            return {
+                ...state,
+                updateModalGoNext: action.payload,
             }
         },
     },
