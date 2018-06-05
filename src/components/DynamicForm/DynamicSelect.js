@@ -21,13 +21,14 @@ export default class DynamicSelect extends PureComponent {
                 options,
             })
         } else if (url) {
-            this.fetchOptions(url)
+            this.fetchOptions()
         }
     }
 
-    fetchOptions = async (url, params) => {
-        const res = await createAPI(url, 'get', {
-            params,
+    fetchOptions = async (params) => {
+        const { url, type, data } = this.props
+        const res = await createAPI(url, type, {
+            data: JSON.stringify(Object.assign(data, params)),
         })
         if (res) {
             this.setState({
@@ -62,7 +63,7 @@ export default class DynamicSelect extends PureComponent {
     @Debounce(500)
     handleSearch (value) {
         if (this.props.url) {
-            this.fetchOptions(this.props.url, { key: value })
+            this.fetchOptions({ key: value })
         }
     }
 

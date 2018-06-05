@@ -12,7 +12,9 @@ class InitForm extends PureComponent {
             return (
                 <DynamicSelect
                     options={item.options}
-                    url={`/custom/dict/querydict?dictCode=${item.dictCode}`}
+                    url='/custom/dict/queryDict'
+                    type='post'
+                    data={{ dictCode: item.dictCode }}
                 />
             )
         } else if (item.type === 'checkbox') {
