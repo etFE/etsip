@@ -63,9 +63,15 @@ export default {
                     type: 'saveCustomHeader',
                     payload: resolveSqlToHeader(reportBody),
                 })
-                yield put(
-                    routerRedux.push('step2')
-                )
+                if (resolveSqlToForm(reportBody).length > 0) {
+                    yield put(
+                        routerRedux.push('step2')
+                    )
+                } else {
+                    yield put(
+                        routerRedux.push('step3')
+                    )
+                }
                 // 将状态改变
                 yield put({
                     type: 'changeAddStatus',

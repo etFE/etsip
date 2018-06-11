@@ -8,7 +8,8 @@ export default {
     namespace: 'report',
 
     state: {
-        updateModalGoNext: false,
+        updateModalFormData: false,
+        updateModalColumns: false, // 上面两个的逻辑：判断sql前后是否一致。来决定，更新步骤：1-2-3 1 1-2 1-3
         updateModalType: '',
         updateModalVisible: false,
         reportList: [],
@@ -36,7 +37,8 @@ export default {
         },
         // 查询 表单 列头
         *fetchReport(_, {call, put, select}) {
-            const { reportCode, modCode } = yield select(state => state.report.currentReport);
+            const { reportCode, modCode, reportBody } = yield select(state => state.report.currentReport);
+            const resolvedFormData = resolveSqlToForm(reportBody)
             // 自定义查询条件
             let formData = yield call(report.querywherejson, {
                 data: JSON.stringify({ reportCode, modCode }),
@@ -44,8 +46,10 @@ export default {
             let columns = yield call(report.queryheadjson, {
                 data: JSON.stringify({ reportCode, modCode }),
             })
-
-            if (!formData || !columns) {
+            // 注意这里的判断
+            // 自定义表单 如果sql没有写where条件，且后台查询出来没有formData, 那么不提示
+            // 如有写了where条件， 但是没有formData，要提示
+            if ((!formData && resolvedFormData.length > 0) || !columns) {
                 message.error('请配置自定义查询条件或自定义列头，否则该报表无法正常使用！', 5)
             }
 
@@ -109,9 +113,17 @@ export default {
 
                 // 判断更新的报表sql体 是否改变了，如果改变了，那么之后的操作都要进入下一步
                 if (reportBody !== payload.reportBody) {
+                    // 这里通过前后的sql，比较，看改变了哪里
+                    const updateModalFormData = JSON.stringify(resolveSqlToForm(payload.reportBody))
+                        !== JSON.stringify(resolveSqlToForm(reportBody))
+                    const updateModalColumns = JSON.stringify(resolveSqlToHeader(payload.reportBody))
+                        !== JSON.stringify(resolveSqlToHeader(reportBody))
                     yield put({
                         type: 'changeModalGoNext',
-                        payload: true,
+                        payload: {
+                            updateModalFormData,
+                            updateModalColumns,
+                        },
                     })
                     // 改变后，再初始化查询条件和表格列头
                     yield put({
@@ -124,7 +136,7 @@ export default {
                     })
                     yield put({
                         type: 'openUpdateModal',
-                        payload: 'updateForm',
+                        payload: updateModalFormData ? 'updateForm' : 'updateHeader',
                     })
                 } else {
                     yield put({
@@ -137,7 +149,7 @@ export default {
         // 更新表单
         *fetchUpdateCustomForm({ payload }, { call, put, select }) {
             const { reportCode, modCode } = yield select(state => state.report.currentReport)
-            const updateModalGoNext = yield select(state => state.report.updateModalGoNext)
+            const updateModalColumns = yield select(state => state.report.updateModalColumns)
             const customForm = [...payload]
             const isPass = customForm.some((item) => {
                 if (item.type === 'select') {
@@ -148,7 +160,7 @@ export default {
                 return true
             })
 
-            if (!isPass) {
+            if (!isPass && customForm.length > 0) {
                 message.error('数据源必须要配置')
                 return
             }
@@ -170,7 +182,7 @@ export default {
                 yield put({ type: 'closeUpdateModal' })
 
                 // 判断是否改变了sql体，是的话，继续跳到下一步
-                if (updateModalGoNext) {
+                if (updateModalColumns) {
                     yield put({
                         type: 'openUpdateModal',
                         payload: 'updateHeader',
@@ -340,7 +352,8 @@ export default {
         changeModalGoNext (state, action) {
             return {
                 ...state,
-                updateModalGoNext: action.payload,
+                updateModalFormData: action.payload.updateModalFormData,
+                updateModalColumns: action.payload.updateModalColumns,
             }
         },
     },
